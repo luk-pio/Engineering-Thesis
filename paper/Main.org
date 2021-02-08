@@ -1,8 +1,12 @@
+#+TITLE: An analysis of dimensionality reduction and music information retrieval techniques for the visual representation of large audio datasets.
+#+Author: Łukasz Piotrak
+#+BEGIN_abstract
+Abstract goes here
+#+END_abstract
 
-* An analysis of dimensionality reduction and music information retrieval techniques for the visual representation of large audio datasets.
-** Abstract
-** Introduction
-*** Background & Motivation
+* Introduction
+** Background & Motivation
+# TODO needs rewriting start with inspirations. Credit other people for the idea
 The current paradigm for the storage and organization of audio files is that of the classic directory tree. This results in an attribute ontology; files are grouped together into classes (usually by directory name) i.e. "Drums", "Vocals" and assigned a range of attributes by means of file name or tags. This approach is limited, e.g. the file might be labeled incorrectly or the labels might not addequately describe the sound. Moreover, many properties inherrent to the files are hard to represent e.g. two audio samples might be in separate branches of the taxonomy but be perceptually similar. However, as shown by projects such as The Infinite Drum Machine by Google Creative Lab, collections of sounds can be explored more naturally with the help of dimensionality reduction techniques.
 
 Advances in this area have enabled the intuitive representation of high-dimensional data. The dimension count of a Dataset can be reduced arbitrarily while still preserving information about its intrinsic properties. Commonly, this approach is used to plot Datapoints as clouds in 2d or 3d space, allowing for a depiction of the data which can be naturally grasped by the human mind.
@@ -11,41 +15,42 @@ As with many kinds of information, audio data in its raw form is unfit for such 
 
 The goal of this paper is to provide an evaluation of both feature extraction and dimensionality reduction techniques, apply them to a large set of audio data and determine which combination of the two gives an optimal visual representaion.
 
-*** Related Work
-**** The infinite drum machine
-**** Klustr
-**** Other Commercial products
-** Background
-*** Music information retreival
-**** Signal processing
-***** The fourier transform
-***** Sampling and the dirac delta function
-***** The fast fourier transform
-***** Signal processing and limitations
-**** Pre processing steps
-***** Down mixing
-***** Normalization
-**** Short-term Fourier Transform (stft)
+** Related Work
+*** The infinite drum machine
+*** Klustr
+*** Other Commercial products
+* Background
+** Machine learning and audio
+** Music information retreival
+*** Signal processing
+**** The fourier transform
+**** Sampling and the dirac delta function
+**** The fast fourier transform
+**** Signal processing and limitations
+*** Pre processing steps
+**** Down mixing
+**** Normalization
+*** Short-term Fourier Transform (stft)
 The Short-term Fourier Transform is a representation of a signal obtained by taking the Fourier transform of short, overlapping segments of time. The method used to obtain the stft is relatively straightforward:
 First, the signal is divided into shorter, equal-length segments over time using a window function. Multiple window functions could be used for this step, however a
 
 Next, the DFT is computed for each segment. We can thus observe how the frequency content of the signal changes as we progress through time.
-**** MFCC
-**** MIR metrics
-***** spectral centroid
-***** spectral rollof
-***** spectral bandwidth
-***** spectral crest
-***** specral flux
-***** spectral flatness
-***** RMS
-***** zero-crossing rate
-*** Dimensionality reduction
-**** PCA
-**** t-sne
-**** umap
-*** Evaluation metrics
-**** Silhoutte score
+*** MFCC
+*** MIR metrics
+**** spectral centroid
+**** spectral rollof
+**** spectral bandwidth
+**** spectral crest
+**** specral flux
+**** spectral flatness
+**** RMS
+**** zero-crossing rate
+** Dimensionality reduction
+*** PCA
+*** t-sne
+*** umap
+** Evaluation metrics
+*** Silhoutte score
 
 The Silhouette Coefficient for a sample $i$ is given by the equation
 \[s(i) = \frac{a(i) - b(i)}{\max{a(i), b(i)}} \]
@@ -60,17 +65,17 @@ The final Silhouette score for a clustering is the mean Silhouette Coefficient o
 \[ \frac{1}{|I|}\sum_{i \in I}{s(i)} \]
 Where $I$ is the set of all datapoints. The final value is in the range $[-1, 1]$ with values closer to -1 indicating incorrect clustering and values closer to +1 indicating highly dense clustering. Scores around zero indicate overlapping clusters. The score is generally higher for convex well-sperated and dense clusters.
 
-**** Roundness
+*** Roundness
 
 The overall roundness of the plot is calculated by using the method proposed by Polsby & Popper cite:popper:
 \[PP(D) = \frac{4 \pi A(D)}{P(D)^{2}} \]
 where $D$ is the convex hull of all points of the plot, $P(D)$ is the circumference and $A(D)$ the area.
-**** Overlap of cluster convex hulls
+*** Overlap of cluster convex hulls
 
 The measure of overlap of the convex hulls of each class. I calculate this by taking the ratio of the area of the unary union of convex hulls of each class to the sum of areas of the convex hulls of each class:
 \[ O = \frac{A(U)}{\sum_{c \in C}A(H_{c})} \]
 Where $A(U)$ is the unary union of all convex hulls, $A(H_{c})$ is the area of the Hull for class c and $C$ is the set of all classes.
-**** Ripleys K function
+*** Ripleys K function
 
 # https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2726315/
 Ripley's K function is sum of the number of points N within a distance r of a selected point p, per area $\lambda$ surrounding p. This  value is normalized by the total points:
@@ -81,17 +86,16 @@ Further normalization gives an expected value of 0, called the H-function:
 \[H(r) = L(r) - r\]
 Now, a positive value of $H(r)$ indicates that the data is clustered at the scale of r. If the value is negative, the data is dispersed.
 
-*** Experiment design and overview
-**** Dataset
+* Experiment design and overview
+** Dataset
 
 I used the Medley-Solos-db dataset assembled by Lostanlen et al. cite:medley,umap. Downloaded through the mirdata python library cite:bittner_fuentes_2019. The dataset consists of 21572 mono WAV files sampled at 44.1 kHz at a bit depth of 32. Every audio clip has a duration of 2972 milliseconds. The data is split into 3 subsets: training, validation and test. Each sample belongs to one instrument category among a taxonomy of 8. Each instrument class was given a distinct color for easier recognition on the plots:
 #+ATTR_LATEX: :float :placement {h}{0.4\textwidth} :caption Selected sample belonging to each of the instrument classes. Each consists of 65,536 32-bit floating point numbers.
 [[./Figures/8_samples.png]]
 
-**** The processing pipeline
+** The processing pipeline
 
 To produce a 2d scatter plot of the dataset, the original audio files, each an array of 65,536 floating-point numbers, has to be reduced to 2 values.
-
 The process can be thought of as having 4 distinct steps:
 1. Preprocessing.
 
@@ -107,47 +111,58 @@ The process can be thought of as having 4 distinct steps:
     After selecting a set of features to serve as a representation of the original files an algorithm is applied to reduce them to two dimensions.
 Once the plots have been generated, the one which most closely fits the defined criteria must be chosen. As such, an extra, fourth step in which plots are evaluated must be added. Each of these steps will be described in greater detail in the next section.
 
-**** Preprocessing
+** Preprocessing
 
 The data is ingested using the Librosa python library cite:brian_mcfee_2020_3955228 used for music and audio analysis. The "librosa.load" method was used to convert the WAV files to a float32 numpy ndarray. After loading the samples, the amplitudes were normalized to be in the range $[-1, 1]$ by dividing by the max amplitude value for the sample. The data loaded in such a way was stored in a hdf5 file.
 
-**** Feature Extraction
+** Feature Extraction
 
 Finding a compact representation of phenomena is crucial for machine learning processess, including dimensionality reduction. To produce a meaningful representation of the raw data, useful to machines as well as humans, the step of extracting features is required. It can be even thought of as a preliminary dimensionality reduction technique as a raw signal consisting of many thousands of values to just a handful, which, with luck, provide an adequate representation of useful characteristics, innate to the signal. Most of the feature extraction steps were calculated using the implementations found in the librosa library.
 
-***** STFT
+#+ATTR_LATEX: :float :caption An example clarinet sample.
+[[./Figures/original_sample.png]]
+
+*** STFT
 
 The Short-time Fourer Transform is a basic representation in signal processing, which captures the change in frequency content over time.
 To extract the stft, I used the librosa implentation. I decided to take the STFT over 32 windows in both the time and frequency domains, finally giving a 32x32 matrix:
 
-# PICTURE
+#+ATTR_LATEX: :float :caption STFT of the sample in figure ...
+[[./Figures/stft.png]]
 
-***** MFCC
+*** MFCC
 
 The Mel-Frequency Cepstral Coefficients are a heavily used in both speech recognition and MIR. cite:medium,klustr,Racharla_2020,article
 I used the librosa implementation to calculate the mfcc's. I decided to go with a Cepstral Coefficient count of 20 and hop length of 256, resulting in a feature size of 20x257:
 
-# PICTURE
+#+ATTR_LATEX: :float :caption MFCC of the sample in figure ...
+[[./Figures/mfcc.png]]
 
-***** MIR Metrics
+*** MIR Metrics
 
 A number of metrics from the field of audio analysis has also found to be useful when extracting timbre information from audio signals cite:article,klustr. In my case these will include:
 
 - Root mean square
-# PICTURE
+#+ATTR_LATEX: :float :caption RMS of the sample in figure ...
+[[./Figures/rms.png]]
 - Spectral Centroid
-# PICTURE
+#+ATTR_LATEX: :float :caption Spectral Centroid of the sample in figure ...
+[[./Figures/Spectral_Centroid.png]]
 - Spectral Crest
-# PICTURE
+#+ATTR_LATEX: :float :caption Spectral Crest of the sample in figure ...
+[[./Figures/Spectral_Crest.png]]
 - Spectral Flux
-# PICTURE
+#+ATTR_LATEX: :float :caption Spectral Flux of the sample in figure ...
+[[./Figures/Spectral_Flux.png]]
 - Spectral Roll
-# PICTURE
+#+ATTR_LATEX: :float :caption Spectral Roll of the sample in figure ...
+[[./Figures/Spectral_Roll.png]]
 - Zero crossing Rate
-# PICTURE
-**** Feature Manipulation
+#+ATTR_LATEX: :float :caption Zero crossing Rate of the sample in figure ...
+[[./Figures/ZeroCrossing_Rate.png]]
+** Feature Manipulation
 
-Many of the features are of different shapes and sizes. Since the matrix passed to the dimensionality reduction algorithm must be rectangular (i.e. a vector for each sample) a way must be found to force the features into a 1-d vector of values. There are a couple of approaches.
+Many of the features are of different shapes and sizes. Since the matrix passed to the dimensionality reduction algorithm must be rectangular (i.e. a vector for each sample) a way must be found to force the features into a 1-d vector of values. I have used two approaches.
 
 - Flattening
 
@@ -165,11 +180,39 @@ Many of the features are of different shapes and sizes. Since the matrix passed 
     - raw stft, reducing size from 32x32 -> 32x1.
     - raw mfcc, reducing size from 20x257 -> 20x1.
 
-**** Dimensionality Reduction
+** Dimensionality Reduction
+
+The last step in the pipeline is the final dimension reduction of the final collection of features to just 2 values. 4 different algorithms were used in this step:
+- Principal Component Analysis
+ 
+  The basic, tried-and-tested dimensionality reduction method. This method doesn't accept any additional parameters except the number of Principal Componenets to output. As such, for each collection of features we obtain 1 plot.
+- T-stochastic neighbour embedding
+
+  What has come to be a widespead technique in the field of machine learning for it's ability to create useful 2d maps of data. Used by McDonal et al.  and Hantrakul et al. to create visualizations of audio data. T-sne's uses extend far beyond just audio data, however. It is commonly used in the field of single-cell genomics to visualize human genetic data cite:doi:10.1142/S0219720017500172 and is able to seperate samples from different continents and even reflects some local, sub-continental patterns.
+
+  3 parameters influence the visualization in a significant way:
+  - Perplexity, which can be interpreted as how much attention the algorithm should give to local or global structure. In the original article van der Maaten & Hinton suggested that perplexity values should generally fall in the range 5-50. In my case, smaller values tend to result in plots with less dense clusters with higher values giving more well-seperated clusters. I chose the values [5, 10, 20, 40, 60] as parameters for the t-sne plots.
+  - The learning rate. Usually falls in the range [10-10000]. I however determined that values higher than 1000 seemed to lose global structure. I chose the values [20, 50, 100, 200, 300]
+  - Iterations. I decided to go with a constant value of 3000. After heuristic tests I determined that the plots seemed to be stable for this dataset.
+     # Since the algorithm should be for general data, this may be needed to be determined heuristically by the program.
+
+- Uniform Manifold Approximation and Projection
+
+  A relatively new dimensionality method. It is very effective at preserving both the local and global structure of the original data in it's projections. Similarly to t-sne it is also based on manifold learning. The important hyperparameters are:
+  - number of neighbours
+    This parameter controls the number of approximate nearest neghbors to use to construct the initial high dimensional graph. Low values tend to focus on the fine, local structure. Higher values put an emphasis on the wider structure since they take into account a larger number of neighbour points. I chose values [5, 10, 15, 30, 50, 100, 200]
+
+  - minimum distance is the value used by the algorithm to determine what the minimum distance points on the embedding can be from each other. I chose to sweep throught the whole range: [0.0, 0.001, 0.01, 0.1, 0.5, 0.75, 0.99]
+
+#+ATTR_LATEX: :float :height 0.75\textheight :width \textwidth :placement {l}{\textwidth} :caption A Umap grid search over stft.\\ It is clear to see that lower values of hyperparameters (top left) give more densely clustered plots with a focus on the local structure, while higher values (bottom right) are more distributed and focus more on global relationships.
+[[./Figures/umap_stft_gridsearch.png]]
 
 
 
-**** Scoring the plots
+
+Since the objective is to make a round and homogenously dispersed plot, while still keeping the clusters seperate, I suspect that values, which strike a balance between being globally spread out and having enough detailed local structure to seperate the clusters will be evaluated as teh best.
+
+** Scoring the plots
 
 The experiment was designed with a particular goal in mind - generating plots from the original audio data which would enable an intuitive grasp of the dataset. In order to achieve this, I define several metrics for evaluating the plots:
 - How well the embedding reflects the inherrent relationships between datapoints. This is measured by the Silhouette score with the class labels corresponding to cluster labels. Also, the overlap of the convex hulls of classes is an indicator of this quality.
@@ -187,11 +230,11 @@ Where:
   \[ overlap(p) = \frac{O(p)}{ \max \{ O(p)| p \in P \}} \  \]
 - $roundness(p)$ is calculated using the Polsby-Popper method. Also normalized relative to the max value for all plots:
   \[ roundness(p) = \frac{PP(p)}{ \max \{ PP(p)| p \in P \}} \  \]
-** Experiment Evaluation
-*** Describe the results and how they apply to the research question
-*** What could be improved
-*** limitations
-*** suggestions for future work
-*** Conclusion
+* Experiment Evaluation
+** Describe the results and how they apply to the research question
+** What could be improved
+** limitations
+** suggestions for future work
+** Conclusion
 
 bibliography:/home/l/Workspace/Engineering-Thesis/paper/Bibliography.bib

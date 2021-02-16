@@ -65,7 +65,7 @@
 
 \vspace*{1cm}
 
-Przeszukiwanie zbiorów plików od dawna sprawia trudność w efektywnej pracy z dźwiękiem. Wraz z postępem w dziedzinie redukcji wymiarowości danych, powstała możliwość zastąpienia klasycznej przeglądarki plików na  bardziej intuicyjną reprezentację, tj. przestzenną mapę plików audio. W tej pracy przedstawiam metodę na ocenę wygenerowanych przestrzennych reprezentacji poprzez zastosowanie metod ze statystyki przestrzennej. Przeprowadzam także analizę metod ekstrakcji cech oraz redukcji wymiarowości i odkrywam, że połączenie metod pca + stft + umap daję najlepszą reprezentację, choć niespodziewaną reprezentację dla zbioru danych składających się z krótkich nagrań gry na instrumentach.
+Przeszukiwanie zbiorów plików od dawna sprawia trudność w efektywnej pracy z dźwiękiem. Wraz z postępem w dziedzinie redukcji wymiarowości danych, powstała możliwość zastąpienia klasycznej przeglądarki plików na  bardziej intuicyjną reprezentację, tj. przestzenną mapę plików audio. W tej pracy przedstawiam metodę na ocenę wygenerowanych przestrzennych reprezentacji poprzez zastosowanie metod ze statystyki przestrzennej. Przeprowadzam także analizę metod ekstrakcji cech oraz redukcji wymiarowości i odkrywam, że połączenie metod pca + stft + umap daję najlepszą, choć niespodziewaną reprezentację dla zbioru danych składających się z krótkich nagrań gry na instrumentach.
 \end{abstract}
 
 \pagebreak
@@ -101,7 +101,7 @@ The idea for this work originally came from the excellent web app by McDonald et
 \subsubsection{Klustr}
 \label{sec:org02aa748}
 
-Similarly to this work, Klustr, by Hantrakul \& Sarwate \cite{klustr} is a review of feature extraction methods and dimensionality reduction algorithms as applied to a large audio dataset. They used a dataset of ~10,000 drum samples, shortened to length 0.25 seconds. The feature set used was: Short-term-Fourier-Transform, Mel-Frequency Cepstral Coefficients, various MIR features (RMSE, spectral centroid, spectral crest, spectral flux, spectral rolloff, zero-crossing rate) and finally features extracted by a Wavenet autoencoder. These features were then applied to a dimensionality reduction step using 3 different dimenionality reduction techniques: PCA, t-Sne and UMAP. The scoring function is a combination of the silhouette coefficient \cite{silhouette}, roundness of plots measured by the Polsby-Popper test \cite{popper} and the ration of overlap of convex hulls of the different drum classes. I have used a similar scoring system, though changing the calculation of the ratio of overlap of the convex hulls and adding another scoring method. Their results showed that, for the dataset they used, a combination of STFT, PCA and UMAP yielded the best 2D visualization.
+Klustr, by Hantrakul \& Sarwate \cite{klustr} is a review of feature extraction methods and dimensionality reduction algorithms as applied to a large audio dataset. They used a dataset of ~10,000 drum samples, shortened to a length of 0.25 seconds. The feature sets used were: Short-term-Fourier-Transform, Mel-Frequency Cepstral Coefficients, various MIR features (RMSE, spectral centroid, spectral crest, spectral flux, spectral rolloff, zero-crossing rate) and finally features extracted by a Wavenet autoencoder. These features were then applied to a dimensionality reduction step using 3 different dimenionality reduction techniques: PCA, t-Sne and UMAP. The scoring function is a combination of the silhouette coefficient \cite{silhouette}, roundness of plots measured by the Polsby-Popper test \cite{popper} and the ratio of overlap of convex hulls of the different drum classes. I have used a similar scoring system, though changing the calculation of the ratio of overlap of convex hulls and adding another scoring method. Their results showed that, for the dataset used, a combination of STFT, PCA and UMAP yielded the best 2D visualization.
 
 \pagebreak
 
@@ -110,8 +110,12 @@ Similarly to this work, Klustr, by Hantrakul \& Sarwate \cite{klustr} is a revie
 \subsection{Music information retreival}
 \label{sec:orge32af72}
 
-The objective of Music information retrieval (MIR) is the extraction of information from music. It is a broad field which lies on the intersection of many different research domains. It uses knowledge from musicology and music theory, (music) psychology, psycho-acoustics, audio engineering, computer science and machine learning. TODO With the recent rise of music streaming platforms, which serve millions of people each day, extracting information from music to classify, categorize and ultimately build effective recommender systems seems more relevant than ever.
-It can be further subdivided into two distinct subdomains. The first includes the analysis of non-audio music formats such as musical notation, song lyrics and even user reviews and bibliographical information (publication date, title etc). The second, named Audio Content Analysis (ACA), uses various techniques from digital signal processing, machine learning, statistics and psychoacoustics, among others, to extract meaningful information from audio signals.
+With the recent rise of music streaming platforms, which serve millions of users each day, extracting information from music to classify, categorize and build effective recommender systems seems more relevant than ever.
+The objective of Music information retrieval (MIR) is the extraction of such information. It is a broad field of study, which lies on the intersection of many different research domains. It uses knowledge from musicology and music theory, (music) psychology, psycho-acoustics, audio engineering, computer science and machine learning. It is rapidly growing in scope, with a rapid increase in published papers in the last few years.
+
+MIR may be subdivided into two distinct subdomains. The first focused mainly on the analysis of non-audio music formats such as musical notation, song lyrics and even user reviews and bibliographical information (publication date, title etc). And the second, Audio Content Analysis (ACA), which uses various techniques from digital signal processing, machine learning, statistics and psychoacoustics, among others, to extract meaningful information from audio signals. Many techniques from ACA are used in machine learning, notably speech recognition and other fields, to extract psycho-acoustic features from raw pulse-code modulated signals.
+
+There are a wide range of features which describe different statistical, physical and perceptual aspects of sound. Some of the most commonly used in the field of MIR are described bellow.
 
 % \subsubsection{Signal processing}
 % \label{sec:org19fe369}
@@ -152,7 +156,7 @@ Next, the Discrete Fourier Transform (DFT) is computed for each segment. We can 
 \subsubsection{MFCC}
 \label{sec:org657745a}
 
-The motivating idea of mel frequency cepstral coefficients is to compress information about the vocal tract (smoothed spectrum) into a small number of coefficients based on an understanding of the cochlea. An example mfcc spectrogram can be seen in \ref{fig:mfcc} There is no one standard way of calculating the coefficients, however the main steps may be summarized as follows:
+The motivating idea of mel frequency cepstral coefficients is to compress information about the vocal tract (smoothed spectrum) into a small number of coefficients based on an understanding of the cochlea and how humans interpret sound. The driving force behind this technique is the observation that humans percieve sound in a logarithmic, not linear scale. An example mfcc spectrogram can be seen in \ref{fig:mfcc} There is no one standard way of calculating the coefficients, however the main steps may be summarized as follows:
 
 \begin{enumerate}
     \item Take a Fourier tranform of a short, windowed fragment of the signal (as in the stft)
@@ -252,6 +256,7 @@ The motivating idea of mel frequency cepstral coefficients is to compress inform
 \end{itemize}
 \subsection{Dimensionality reduction}
 \label{sec:orgb502774}
+TODO
 \subsubsection{PCA}
 \label{sec:org93f3c9b}
 \subsubsection{t-sne}
@@ -261,6 +266,8 @@ The motivating idea of mel frequency cepstral coefficients is to compress inform
 
 \subsection{Evaluation metrics}
 \label{sec:org078e27c}
+
+Below are detailed description of measures I chose to describe the correctness and usability of plots.
 \subsubsection{Silhoutte score}
 \label{sec:org8d91088}
 
@@ -551,7 +558,7 @@ With \(H_{p}(r)\) being Ripley's H-function for plot \(p\) taken for radius \(r\
 \caption{\label{fig:best_overall}The best scoring plots for each feature set.}
 \end{figure*}
 
-The final, best scoring plots for different feature sets are shown in \ref{fig:best_overall}. Looking at the plots in this figure, the resulting plots seem to be satisfactory. That is, most of the plots seperate the classes relatively well as well as retaining a round and fairly uniform structure as well as well-seperated clusters. The exceptions are plots which have gone through a preliminary pca reduction step, leaving 3 prinicipal components, labeled \textit{pca 3 stft} and \textit{pca 3 mfcc}. The interesting, string shaped plots only appear with the combination of pca 3 + umap. This is most probably a side-effect of the way in which umap builds it's high dimensional representation of the data using the fuzzy simplical complex. Somehow, umap decides that the global structure contained in the 3d pca plot shown in \ref{fig:3d_pca} is best represented in this way. A closer look at the umap grid search (\ref{fig:umap_3d_pca_grid_search}) reveals that this is indeed the case. The more nearest neighbours the umap algorithm uses to determine connectedness in the high-dimensional representation, the more pronounced becomes the pattern.
+The final, best scoring plots for different feature sets are shown in \ref{fig:best_overall}. Most of the plots seperate the instrument classes relatively well They also seem to exhibit a round and fairly uniform structure. The exceptions are plots which have gone through a preliminary pca reduction step, leaving 3 prinicipal components. These are labeled \textit{pca 3 stft} and \textit{pca 3 mfcc}. The interesting, string-shaped plots only appear with the combination of \textit{ pca 3 stft } and \textit{ pca 3 mfcc } with \textit{ umap }. This is most probably a side-effect of the way in which umap builds it's high dimensional representation of the data by using a fuzzy simplical complex. Umap always connects points to their nearest neighbour in the high-dimensional representation. I hypothesize that the string-like shapes are the joined nearest neighbours. Umap then decides that the global structure contained in the 3d pca plot shown in \ref{fig:3d_pca} is best represented by spacing the strings as visible in the plots. A closer look at the umap grid search (\ref{fig:umap_3d_pca_grid_search}) reveals that this is most probably  the case. The more nearest neighbours the umap algorithm uses to determine connectedness in the high-dimensional representation, the more pronounced becomes the pattern.
 
 \begin{figure}[hb]
 \centering
@@ -568,7 +575,7 @@ The final, best scoring plots for different feature sets are shown in \ref{fig:b
 
 This phenomenon is all the more interesting when we take a look at the top scoring plots overall, shown in \ref{fig:top_overall}. All the best scoring plots are from this particular feature set.
 
-This result is counterintuitive. It seems that many of the other plots would score better on every metric. The plots seem to be less clustered and less uniformly distributed. However, when looking closely at the values, we can see that the silhouette and and overlap scores are very close to other plots, maybe slightly worse. However, when we look at the Ripley score, we see that these plots have values significantly closer to zero (meaning a higher score after normalization).
+This result is counterintuitive. It seems that many of the other plots would score better on each metric. The plots seem to be less clustered and less uniformly distributed. When looking closely at the values, we can see that the silhouette and and overlap scores for the \textit{pca 3} plots are very close the scores of the other plots. However, when we look at the Ripley score, we see that these plots have values significantly closer to zero (meaning a higher score after normalization).
 
 \begin{figure*}[htbp]
 \centering
@@ -579,7 +586,7 @@ This result is counterintuitive. It seems that many of the other plots would sco
 
 \subsection{The Ripley metric}
 
-Looking at the top scoring plots for the ripley metric presented in \ref{fig:top_ripley}, it is clear that the pca 3 plots do indeed score very highly in this regard. The first 8 top scoring ripley metrics come from a combination of pca 3 + umap. My hypothesis is that each of the string like shapes is composed of points which are placed at distance apart from each other equal to that of the min dist umap parameter. Also the strings themselves seem to be roughly equally spaced apart from each other. Taking a circle from any point, we obtain an approximately equally distributed number of points. Hence, the high score of these plots for the Ripley metric. Since the points in the strings are tightly packed the Silhouette intra-cluster distance also scores relatively high.
+Looking at the top scoring plots for the ripley metric presented in \ref{fig:top_ripley}, it is clear that the pca 3 plots do indeed score very highly in this regard. The first 8 top scoring ripley metrics come from a combination of pca 3 + umap. My hypothesis is that each of the string like shapes is composed of points which are placed at distance apart from each other equal to that of the min dist umap parameter. \ref{fig:umap_3d_pca_grid_search} seems to show this as the points on the strings get slightly more farther apart as the \textit{min dists} parameter increases. Also umap seems to have placed the strings themselves seem to be roughly equally spaced from each other. Thanks to this, if we take a circle from any point, we obtain an approximately equally distributed number of points. Hence, the high score of these plots for the Ripley metric. Since the points in the strings are tightly packed the Silhouette intra-cluster distance is low, the silhouette measure interprets as relatively well-clustered.
 
 \begin{figure*}[htbp]
 \centering
@@ -588,7 +595,7 @@ Looking at the top scoring plots for the ripley metric presented in \ref{fig:top
 \label{fig:top_ripley}
 \end{figure*}
 
-Let's see what the best plots are if we exclude the pca 3 features. Seen in \ref{fig:top9_no_pca3}. The plots are drastically different. A lot more inline with what might have been expected. However, It is interesting to see that the string-like behaviour is present here also, although this time coming from a different feature, namely reduced mir. All the string like plots are still produced by umap.
+Let's see what the best plots are if we exclude the pca 3 features. See \ref{fig:top9_no_pca3}. The plots are drastically different. A lot more inline with what might have been expected. It is interesting to see that the similar behaviour is present here also, although this time coming from a different feature, namely \textit{reduced mir}. All these plots are also a result of umap.
 
 \begin{figure*}[htbp]
 \centering
@@ -599,7 +606,7 @@ Let's see what the best plots are if we exclude the pca 3 features. Seen in \ref
 
 \subsection{The Silhouette Measure}
 
-But what happends if we remove the Ripley metric altogether? In \ref{fig:top9_no_ripley} we can see the top 9 plots which scored highest without the Ripley metric. The difference is enormous and it is clear to see why this metric is so crucial for good-looking plots. These plots exhibit very clear and cleanly seperated clusters. It is however, obvious that these plots would not be useful for the intended use case as the clusters are \textit{too} dense and would be hard to navigate. This is why the Ripley metric is so indespensable.
+But what happends if we remove the Ripley metric altogether? In \ref{fig:top9_no_ripley} we can see the top 9 plots which scored highest without the Ripley metric. The difference is enormous. It is clear to see why this metric is so crucial for good-looking plots. These plots exhibit very clear and cleanly seperated clusters. These plots, however, would not be useful for the intended use case as the clusters are \textit{too} dense and would be hard to navigate. This is why the Ripley metric is indespensable.
 
 % \begin{figure*}[htbp]
 % \centering

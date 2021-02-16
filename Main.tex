@@ -60,7 +60,8 @@
 \end{titlepage}
 
 \begin{abstract}
-Navigation and search has long been a bottleneck activity when working with sound. Recent advancements in dimensionality reduction techniques have made it possible to replace the classic directory tree with a spacial map of audio files, resulting in a more intuitive representation. I provide a method of evaluating visualizations using methods from spatial statistics and find that a combination of pca + stft + umap methods gives the best scoring, although unexpected 2d embedding on a dataset of instrument recordings.
+  Navigation and search has long been a bottleneck activity when working with sound. Recent advancements in dimensionality reduction techniques have made it possible to replace the classic directory tree with a spacial map of audio files, resulting in a more intuitive
+  representation. I provide a method of evaluating visualizations using methods from spatial statistics and find that a combination of pca + stft + umap methods gives the best scoring, although unexpected 2d embedding on a dataset of instrument recordings.
 
 \vspace*{1cm}
 
@@ -101,6 +102,8 @@ The idea for this work originally came from the excellent web app by McDonald et
 \label{sec:org02aa748}
 
 Similarly to this work, Klustr, by Hantrakul \& Sarwate \cite{klustr} is a review of feature extraction methods and dimensionality reduction algorithms as applied to a large audio dataset. They used a dataset of ~10,000 drum samples, shortened to length 0.25 seconds. The feature set used was: Short-term-Fourier-Transform, Mel-Frequency Cepstral Coefficients, various MIR features (RMSE, spectral centroid, spectral crest, spectral flux, spectral rolloff, zero-crossing rate) and finally features extracted by a Wavenet autoencoder. These features were then applied to a dimensionality reduction step using 3 different dimenionality reduction techniques: PCA, t-Sne and UMAP. The scoring function is a combination of the silhouette coefficient \cite{silhouette}, roundness of plots measured by the Polsby-Popper test \cite{popper} and the ration of overlap of convex hulls of the different drum classes. I have used a similar scoring system, though changing the calculation of the ratio of overlap of the convex hulls and adding another scoring method. Their results showed that, for the dataset they used, a combination of STFT, PCA and UMAP yielded the best 2D visualization.
+
+\pagebreak
 
 \section{Background}
 \label{sec:org4d1b31d}
@@ -297,6 +300,8 @@ Further normalization gives an expected value of 0, called the H-function:
 \[H(r) = L(r) - r\]
 Now, a positive value of \(H(r)\) indicates that the data is clustered at the scale of r. If the value is negative, the data is dispersed.
 
+\pagebreak
+
 \section{Experiment design and overview}
 \label{sec:orga220b5b}
 \subsection{Dataset}
@@ -393,11 +398,12 @@ I used the librosa implementation to calculate the mfcc's. I decided to go with 
 A number of metrics from the field of audio analysis has also found to be useful when extracting timbre information from audio signals \cite{article,klustr}. In my case these will include:
 
 \begin{itemize}
-\item Root mean square
 \item Spectral Centroid
+\item Spectral Rolloff
+\item Spectral bandwidth
 \item Spectral Crest
 \item Spectral Flux
-\item Spectral Roll
+\item Root mean square
 \item Zero crossing Rate
 \end{itemize}
 
@@ -431,6 +437,41 @@ In my case this procedure was applied to obtain the following four features:
 \end{itemize}
 
 Inspired by the successes of Klustr \cite{klustr}, with using a preliminary dimensionality reduction step on raw features using PCA before feeding applying dimensionality reduction proper, I also tried this approach on the raw stft and mfcc features. I decided to make features out of the top $n$ principal components, where $n$ took the values: [3, 5, 8, 12, 20].
+
+The final list of features is shown in table \ref{table:all_features}
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{ |c|c|c| }
+\hline
+Metric Name & Dimensions & Description \\
+\hline
+stft & 32x32 & Original stft \\
+stat stft & 32x3 & statistically shortened stft \\
+vert stat stft & 3 & vertically statistically shortened stft \\
+pca 3 stft & 3 & First 3 principal components of the original stft \\
+pca 5 stft & 3 & First 5 principal components of the original stft \\
+pca 8 stft & 8 & First 8 principal components of the original stft \\
+pca 12 stft & 12 & First 12 principal components of the original stft \\
+pca 20 stft & 20 & First 20 principal components of the original stft \\
+mfcc & 20x257 & Original mfcc \\
+stat mfcc & 20x3 & statistically shortened mfcc \\
+vert stat mfcc & 3 & vertically statistically shortened mfcc \\
+pca 3 mfcc & 3 & First 3 principal components of the original mfcc \\
+pca 5 mfcc & 3 & First 5 principal components of the original mfcc \\
+pca 8 mfcc & 8 & First 8 principal components of the original mfcc \\
+pca 12 mfcc & 12 & First 12 principal components of the original mfcc \\
+pca 20 mfcc & 20 & First 20 principal components of the original mfcc \\
+stat stft + stat mfcc & 52x3 & stat mfcc appended to stat stft \\
+all mir & 8x3 & statistically shortened mir metrics \\
+reduced mir & 6x3 & mir metrics without rms and centroid \\
+pca 3 mfcc + reduced mir & 7x3 & reduced mir with pca 3 mfcc \\
+pca 3 stft + reduced mir & 7x3 & reduced mir with pca 3 stft \\
+\hline
+\end{tabular}
+\caption{All feature sets used for the dimensionality reduction step}
+\label{table:all_features}
+\end{table}
 
 \subsection{Dimensionality Reduction}
 \label{sec:orgfde1e30}
@@ -497,9 +538,11 @@ With \(H_{p}(r)\) being Ripley's H-function for plot \(p\) taken for radius \(r\
 \[ roundness(p) = \frac{PP(p)}{ \max \{ PP(p)| p \in P \}} \  \]
 \end{itemize}
 
+\pagebreak
+
 \section{Experiment Evaluation}
 \label{sec:org8d9a4f0}
-\subsection{Results}
+\subsection{Overall Results}
 \label{sec:org5ce221c}
 
 \begin{figure*}[htbp]
@@ -509,7 +552,6 @@ With \(H_{p}(r)\) being Ripley's H-function for plot \(p\) taken for radius \(r\
 \end{figure*}
 
 The final, best scoring plots for different feature sets are shown in \ref{fig:best_overall}. Looking at the plots in this figure, the resulting plots seem to be satisfactory. That is, most of the plots seperate the classes relatively well as well as retaining a round and fairly uniform structure as well as well-seperated clusters. The exceptions are plots which have gone through a preliminary pca reduction step, leaving 3 prinicipal components, labeled \textit{pca 3 stft} and \textit{pca 3 mfcc}. The interesting, string shaped plots only appear with the combination of pca 3 + umap. This is most probably a side-effect of the way in which umap builds it's high dimensional representation of the data using the fuzzy simplical complex. Somehow, umap decides that the global structure contained in the 3d pca plot shown in \ref{fig:3d_pca} is best represented in this way. A closer look at the umap grid search (\ref{fig:umap_3d_pca_grid_search}) reveals that this is indeed the case. The more nearest neighbours the umap algorithm uses to determine connectedness in the high-dimensional representation, the more pronounced becomes the pattern.
-
 
 \begin{figure}[hb]
 \centering
@@ -526,7 +568,7 @@ The final, best scoring plots for different feature sets are shown in \ref{fig:b
 
 This phenomenon is all the more interesting when we take a look at the top scoring plots overall, shown in \ref{fig:top_overall}. All the best scoring plots are from this particular feature set.
 
-This result is counterintuitive. It seems that many of the other plots would score better on practically every metric. The plots seem to be less clustered and less uniformly distributed. However, when looking more closely at the values, we can see that the silhouette and and overlap scores are very close to other plots, maybe slightly worse. However, when we look at the Ripley score, we see that these plots have values significantly closer to zero (meaning a higher score after normalization).
+This result is counterintuitive. It seems that many of the other plots would score better on every metric. The plots seem to be less clustered and less uniformly distributed. However, when looking closely at the values, we can see that the silhouette and and overlap scores are very close to other plots, maybe slightly worse. However, when we look at the Ripley score, we see that these plots have values significantly closer to zero (meaning a higher score after normalization).
 
 \begin{figure*}[htbp]
 \centering
@@ -535,7 +577,9 @@ This result is counterintuitive. It seems that many of the other plots would sco
 \label{fig:top_overall}
 \end{figure*}
 
-Looking at the top scoring plots for the ripley metric presented in \ref{fig:top_ripley}, it is clear that the pca 3 plots do indeed score very highly in this regard. The first 8 top scoring ripley metrics come from a combination of pca 3 + umap. My hypothesis is that each of the string like shapes is composed of points which are placed at distance apart from each other equal to that of the min dist umap parameter. Also the strings themselves seem to be roughly equally spaced apart from each other. This means that for a circle taken from any point we obtain an approximately equally distributed number of points. Hence, the high score of these plots for the Ripley metric.
+\subsection{The Ripley metric}
+
+Looking at the top scoring plots for the ripley metric presented in \ref{fig:top_ripley}, it is clear that the pca 3 plots do indeed score very highly in this regard. The first 8 top scoring ripley metrics come from a combination of pca 3 + umap. My hypothesis is that each of the string like shapes is composed of points which are placed at distance apart from each other equal to that of the min dist umap parameter. Also the strings themselves seem to be roughly equally spaced apart from each other. Taking a circle from any point, we obtain an approximately equally distributed number of points. Hence, the high score of these plots for the Ripley metric. Since the points in the strings are tightly packed the Silhouette intra-cluster distance also scores relatively high.
 
 \begin{figure*}[htbp]
 \centering
@@ -544,18 +588,38 @@ Looking at the top scoring plots for the ripley metric presented in \ref{fig:top
 \label{fig:top_ripley}
 \end{figure*}
 
-TODO explain why silhouette is ineffective on its own
+Let's see what the best plots are if we exclude the pca 3 features. Seen in \ref{fig:top9_no_pca3}. The plots are drastically different. A lot more inline with what might have been expected. However, It is interesting to see that the string-like behaviour is present here also, although this time coming from a different feature, namely reduced mir. All the string like plots are still produced by umap.
 
-TODO show the best plots without pca 3
+\begin{figure*}[htbp]
+\centering
+\makebox[\textwidth]{\includegraphics[height=.65\paperheight, trim=0 0 0 15cm]{./Figures/top9_no_pca3.png}}
+\caption{Top 9 scoring plots excluding the pca 3 features}
+\label{fig:top9_no_pca3}
+\end{figure*}
 
-TODO compare stat shortened metrics to non stat shortened
+\subsection{The Silhouette Measure}
 
-\subsection{Limitations}
-\label{sec:org1e550a7}
+But what happends if we remove the Ripley metric altogether? In \ref{fig:top9_no_ripley} we can see the top 9 plots which scored highest without the Ripley metric. The difference is enormous and it is clear to see why this metric is so crucial for good-looking plots. These plots exhibit very clear and cleanly seperated clusters. It is however, obvious that these plots would not be useful for the intended use case as the clusters are \textit{too} dense and would be hard to navigate. This is why the Ripley metric is so indespensable.
+
+% \begin{figure*}[htbp]
+% \centering
+% \makebox[\textwidth]{\includegraphics[height=.65\paperheight, trim=0 0 0 15cm]{./Figures/top9_without_ripley.png}}
+% \caption{Top 9 scoring plots for metrics without the ripley measure}
+% \label{fig:top9_no_pca3}
+% \end{figure*}
+
+% TODO compare stat shortened metrics to non stat shortened
+
 \subsection{Future work}
 \label{sec:org1054556}
+
+Finding the correct metrics is crucial to correctly solving this problem. While it is probable that a combination of clustering and spatial measurements is the correct way to approach the problem, more work is still needed to find a set of metrics which would provide an optimal way of evaluating the plots in terms of both how well the timbral characteristics of the dataset are reflected (i.e how well the sounds are clustered) and how comfortable the plot would be to use as a file browser (shape and density distribution).
+
+In addition to this even more feature extraction methods such as wavenet autoencoders and methods from the field of MIR could be tested. There are also many more dimensionality reduction methods to experiment with.
 \subsection{Conclusion}
 \label{sec:orgf2b4e9e}
+
+The findings in this thesis where unexpected. Because of the findings of Hantrakul and Sarwate \cite{klustr}, I expected the combination of pca + stft + umap to do well. However the shape of the best-scoring plots where a big surprise and make the end results a lot more interesting than anticipated.
 
 \bibliography{Bibliography}
 \bibliographystyle{plain}

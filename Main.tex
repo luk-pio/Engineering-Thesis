@@ -18,6 +18,7 @@
 \usepackage{appendix}
 \usepackage{fancyhdr}
 \usepackage{etoolbox}
+\usepackage{amssymb}
 \usepackage{titlesec}
 
 \usepackage[nottoc]{tocbibind}
@@ -36,32 +37,27 @@
 \pagestyle{fancy}
 \fancyhf{}
 
-\renewcommand{\chaptermark}[1]{\markleft{\thechapter.\ #1}}
-% \renewcommand{\chaptermark}[1]{\markboth{\chaptername\ \thesection.\ #1}{}}
-% \renewcommand{\sectionmark}[1]{\markright{\thesection.\ #1}}
+\renewcommand{\chaptermark}[1]{\markboth{\thechapter.\ #1}{}}
 
 \fancyhead[LE,RO]{\textsl{\textbf{\thepage}}}
 \fancyhead[LO,RE]{\textsl{\leftmark}}
 
-% \fancyfoot[R]{\thepage}
-
 % change the chapter headings to also use fancy
 \patchcmd{\chapter}{\thispagestyle{plain}}{\thispagestyle{fancy}}{}{}
 
+% Change the chapter title format
 \titleformat
 {\chapter} % command
 [display] % shape
-{\bfseries\Large\itshape} % format
+{\bfseries\Huge} % format
 {}
-{0.1ex} % sep
+{-0.5ex} % sep
 {
     \raggedleft
-} % before-code
-[
-\vspace{-0.5ex}%
-\rule{\textwidth}{0.3pt}
-] % after-code
+}
 
+% turn off paragraph indentation
+\setlength{\parindent}{0pt}
 
 \begin{document}
 
@@ -214,13 +210,13 @@ The motivating idea of mel frequency cepstral coefficients is to compress inform
     \item The amplitudes of the resulting spectrum are the Coefficients.
 \end{enumerate}
 
-\begin{figure}[h!]
+\begin{figure}[h!b]
 \centering
-\includegraphics[width=\textwidth]{./Figures/mel_filterbank.png}
+\includegraphics[width=0.7\textwidth]{./Figures/mel_filterbank.png}
 \caption{\label{fig:mel_filterbank}The mel filterbank}
 \end{figure}
 
-\subsection{MIR metrics}
+\subsection{MIR metrics} \label{mir}
 \label{sec:org59595af}
 \subsubsection{Spectral Centroid}
 \label{sec:org722ed3e}
@@ -305,7 +301,7 @@ The motivating idea of mel frequency cepstral coefficients is to compress inform
 \subsection{Principal Component Analysis (PCA)}
 \label{sec:org93f3c9b}
 
-PCA is an orhtogonal linear transformation, which projects data onto a new system of axes. The projection is such that the first axis accounts for the greatest variance in the data, the second axes for the second greatest, and so on. The computation is described in the following steps:
+PCA is an orhtogonal linear transformation, which projects data onto a new system of axes. The projection is such that the first axis accounts for the greatest variance in the data, the second axes for the second greatest, and so on. The computation is described as follows:
 
 \begin{enumerate}
 \item \textbf{Normalization}.
@@ -368,9 +364,7 @@ Where $P$ is the projected data, $C$ the matrix containing the Principal Compone
 \subsection{t-Distributed Stochastic Neighbour Embedding (t-SNE)}
 \label{sec:orgadaa38f}
 
-t-Distributed Stochastic Neighbour Embedding is a nonlinear dimensionality reduction technique used for embedding high-dimensional datasets into 2 or 3 dimensions. It is based on the original Stochastic Neighbour Embedding (SNE), developed by Roweis and Hinton \cite{sne} in 2002 and improved by Maaten and Hinton \cite{tsne} in 2008 by adding the use of the t-distribution.
-
-The steps for calculating t-SNE may be described as follows:
+t-Distributed Stochastic Neighbour Embedding is a nonlinear dimensionality reduction technique used for embedding high-dimensional datasets into 2 or 3 dimensions. It is based on the original Stochastic Neighbour Embedding (SNE), developed by Roweis and Hinton \cite{sne} in 2002 and improved by Maaten and Hinton \cite{tsne} in 2008 by adding the use of the t-distribution. The steps for calculating t-SNE may be described as follows:
 
 \begin{enumerate}
     \item Begin by converting of the Euclidean distances between points in the original dataset into conditional probabilities that represent how similar points are to each other. From the original t-SNE paper: ``The similarity of datapoint $x_{j}$ to datapoint $x_{i}$ is the conditional probability, $p_{j|i}$, that $x_{i}$ would pick $x_{j}$ as its neighbor if  neighbours were picked in proportion to their probability density under a Gaussian centered at $x_{i}$.'' In essence, this means that points which are close together in the original dataset are have a high value $p_{j|i}$ while those which are further away obtain lower values in proportion to their distance. The condition $p_{j|i}$ is given by:
@@ -383,11 +377,11 @@ The steps for calculating t-SNE may be described as follows:
 
     \[ H(P_{i}) = - \Sigma_{j}p_{j|i} \log p_{j|i} \]
 
-    The probability is defined as
+    The probability is defined as:
     \[ p_{ij} = \frac{p_{j|i} + p_{i|j}}{2N}\]
-    with $p_{ij} = p_{ji}$, $p_{ii} = 0$ and $\Sigma_{i,j}p_{ij} = 1$ so that .
+    with $p_{ij} = p_{ji}$, $p_{ii} = 0$ and $\Sigma_{i,j}p_{ij} = 1$.
 
-    \item Next, a measure of similarity is defined between two points ($y_{i}$ and $y_{j}$) in the low dimensional embedding. If $d$ is the number of dimensions, then $y_{i} \in I\!R^{d}$.
+    \item Next, a measure of similarity is defined between two points ($y_{i}$ and $y_{j}$) in the low dimensional embedding. If $d$ is the number of dimensions, then $y_{i} \in \mathbb{R}^{d}$:
     \[ q_{ij} = \frac{\exp(1 + ||y_{i} - y_{j}||^{2})^{-1}}{\Sigma_{k}\Sigma_{l \neq k}\exp( 1 + ||y_{k} - y_{l}||^{2})^{-1}} \]
     As previously $q_{ii} = 0$. Here, the distribution is Student's t-distribution with one degree of freedom. The distribution is chosen because $(1 + ||y_{i} - y_{j}||^{2})^{-1}$ approaches an inverse square law for large distances between points in the low-dimensional map. This allows dissimilar datapoints to be modeled as far apart in the low-dimensional embedding.
 
@@ -396,7 +390,7 @@ The steps for calculating t-SNE may be described as follows:
     \item Gradient descent is performed on the low-dimensional embedding of the data in such a way as to minimize the Kullback-Leibler divergence between $p$ and $q$. The divergence is defined as:
     \[ KL(P || Q) = \Sigma_{i}\Sigma_{j}p_{ij}\log \frac{p_{ij}}{q_{ij}} \]
 
-    The gradient descent minimizes a Kullback-Leibler divergence between a joint probability distribution $P$ and the joint probability distribution $Q$
+    The gradient descent minimizes a Kullback-Leibler divergence between a joint probability distribution $P$ and the joint probability distribution $Q$:
     \[ C = KL(P||Q)\]
 
     In general, the cost is large if widely seperated points in the embedding are used to represent points which are nearby in the original data (using a small $q_{i|j}$ to model a large $p_{j|i}$). Conversely using nearby embedding points to represent widely seperated datapoints has a small cost. This gives a focus on retaining local structure in the embedding. The final gradient descent function is:
@@ -461,7 +455,7 @@ Now, a positive value of \(H(r)\) indicates that the data is clustered at the sc
 
 I used the Medley-Solos-db dataset assembled by Lostanlen et al. \cite{medley}. Downloaded through the \textit{ mirdata } Python library \cite{bittner_fuentes_2019}. The dataset consists of 21572 mono WAV files sampled at 44.1 kHz at a bit depth of 32. Every audio clip has a duration of 2972 milliseconds. The data is split into 3 subsets: training, validation and test. Each sample belongs to one instrument category among a taxonomy of 8. Each instrument class was given a distinct color for easier recognition on the plots as seen in \ref{fig:8-plots}. I use the training subset of this dataset. The distribution of sounds is summarized in table \
 
-\begin{table}[h!]
+\begin{table}[h!b]
 \centering
 \begin{tabular}{ |c|c|c|c|c|c|c|c| }
 \hline
@@ -527,7 +521,7 @@ Finding a compact representation of phenomena is crucial for machine learning pr
 The Short-time Fourier Transform is a basic representation in signal processing, which captures the change in frequency content over time.
 To extract the STFT, I used the librosa implementation. I decided to take the STFT over 32 windows in both the time and frequency domains, finally giving a 32x32 matrix:
 
-\begin{figure}[H]
+\begin{figure}[h!]
 \centering
 \includegraphics[width=.7\linewidth]{./Figures/stft.png}
 \caption{STFT of the sample in figure \ref{fig:example-fig}}
@@ -539,7 +533,7 @@ To extract the STFT, I used the librosa implementation. I decided to take the ST
 The Mel-Frequency Cepstral Coefficients are a heavily used in both speech recognition and Music Information Retrieval \cite{medium,klustr,Racharla_2020,article}.
 I used the librosa implementation to calculate the MFCC's. I decided to go with 20 Cepstral Coefficient and a hop length of 256, resulting in a feature size of 20x257:
 
-\begin{figure}[H]
+\begin{figure}[h!]
 \centering
 \includegraphics[width=.7\linewidth]{./Figures/mfcc.png}
 \caption{\label{fig:mfcc}MFCC of the sample in figure \ref{fig:example-fig}}
@@ -548,19 +542,9 @@ I used the librosa implementation to calculate the MFCC's. I decided to go with 
 \subsection{Music Information Retrieval Metrics}
 \label{sec:orgb3249b0}
 
-A number of metrics from the field of audio analysis has also found to be useful when extracting timbre information from audio signals \cite{article,klustr}. In my case these will include:
+A number of metrics from the field of audio analysis has also found to be useful when extracting timbre information from audio signals \cite{article,klustr}. In my case these will include all those described in \ref{mir}
 
-\begin{itemize}
-\item Spectral Centroid
-\item Spectral Rolloff
-\item Spectral bandwidth
-\item Spectral Crest
-\item Spectral Flux
-\item Root mean square
-\item Zero crossing Rate
-\end{itemize}
-
-\begin{figure}[H]
+\begin{figure}[h!]
 \centering
 \includegraphics[width=.7\linewidth]{./Figures/mir_features.png}
 \caption{Graphs of MIR features for the sample in figure \ref{fig:example-fig}}

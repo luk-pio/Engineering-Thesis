@@ -1,6 +1,6 @@
 % Created 2021-02-08 pon 15:45
 % Intended LaTeX compiler: pdflatex
-\documentclass[11pt]{article}
+\documentclass[a4paper, 12pt, twoside]{report}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{graphicx}
@@ -15,6 +15,10 @@
 \usepackage{amssymb}
 \usepackage{capt-of}
 \usepackage{hyperref}
+\usepackage{appendix}
+\usepackage{fancyhdr}
+\usepackage{etoolbox}
+\usepackage{titlesec}
 
 \usepackage[nottoc]{tocbibind}
 \author{Łukasz Piotrak}
@@ -29,51 +33,95 @@
  pdflang={English}
 }
 
+\pagestyle{fancy}
+\fancyhf{}
+
+\renewcommand{\chaptermark}[1]{\markleft{\thechapter.\ #1}}
+% \renewcommand{\chaptermark}[1]{\markboth{\chaptername\ \thesection.\ #1}{}}
+% \renewcommand{\sectionmark}[1]{\markright{\thesection.\ #1}}
+
+\fancyhead[LE,RO]{\textsl{\textbf{\thepage}}}
+\fancyhead[LO,RE]{\textsl{\leftmark}}
+
+% \fancyfoot[R]{\thepage}
+
+% change the chapter headings to also use fancy
+\patchcmd{\chapter}{\thispagestyle{plain}}{\thispagestyle{fancy}}{}{}
+
+\titleformat
+{\chapter} % command
+[display] % shape
+{\bfseries\Large\itshape} % format
+{}
+{0.1ex} % sep
+{
+    \raggedleft
+} % before-code
+[
+\vspace{-0.5ex}%
+\rule{\textwidth}{0.3pt}
+] % after-code
+
+
 \begin{document}
 
 \begin{titlepage}
-        \vspace*{1cm}
 
-        \Large
-        \textbf{An analysis of dimensionality reduction and music information retrieval techniques for the visual representation of large audio datasets.}
+        \includegraphics[width=\textwidth]{./Figures/pjatk_logo.jpg}
+
 
     \begin{center}
         \vspace{1.5cm}
 
-        \textbf{Łukasz Piotrak} \\
+        \Large
+        \textbf{Department of Computer Science} \\
+
+        \normalsize
+        Specialization of Intelligent Data Processing Systems \\
 
         \vfill
 
-        A thesis presented for the degree of \\ Bachelor of Engineering
-
-        \vspace{0.8cm}
-
-        \includegraphics[width=0.4\textwidth]{./Figures/PJATKLogo.png}
-
         \Large
-        supervisor: Hung Son Nguyen \\
-        Polish-Japanese Academy of Information Technology \\
-        Department of Computer Science \\
-        Poland, February 2021
+        \textbf{Łukasz Piotrak} \\
+        \small
+        s18002
+
+        \vfill
+
+    \end{center}
+        \Large
+        \textbf{An analysis of dimensionality reduction and music information retrieval techniques for the visual representation of large audio datasets.}
+
+        \vfill
+
+    \begin{center}
+
+        \large
+        Bachelor of Science \\
+        Thesis Supervisor: Sinh Hoa Nguyen \\
+
+        \vfill
+
+        \normalsize
+        Warsaw, Poland, February 2021
 
     \end{center}
 \end{titlepage}
 
 \begin{abstract}
   Navigation and search has long been a bottleneck activity when working with sound. Recent advancements in dimensionality reduction techniques have made it possible to replace the classic directory tree with a spacial map of audio files, resulting in a more intuitive
-  representation. I provide a method of evaluating visualizations using methods from spatial statistics and find that a combination of pca + stft + umap methods gives the best scoring, although unexpected 2d embedding on a dataset of instrument recordings.
+  representation. I provide a method of evaluating visualizations using methods from spatial statistics and find that a combination of PCA + STFT + UMAP methods gives the best scoring, although unexpected 2D embedding on a dataset of instrument recordings.
 
 \vspace*{1cm}
 
-Przeszukiwanie zbiorów plików od dawna sprawia trudność w efektywnej pracy z dźwiękiem. Wraz z postępem w dziedzinie redukcji wymiarowości danych, powstała możliwość zastąpienia klasycznej przeglądarki plików na  bardziej intuicyjną reprezentację, tj. przestzenną mapę plików audio. W tej pracy przedstawiam metodę na ocenę wygenerowanych przestrzennych reprezentacji poprzez zastosowanie metod ze statystyki przestrzennej. Przeprowadzam także analizę metod ekstrakcji cech oraz redukcji wymiarowości i odkrywam, że połączenie metod pca + stft + umap daję najlepszą, choć niespodziewaną reprezentację dla zbioru danych składających się z krótkich nagrań gry na instrumentach.
+Przeszukiwanie zbiorów plików od dawna sprawia trudność w efektywnej pracy z dźwiękiem. Wraz z postępem w dziedzinie redukcji wymiarowości danych, powstała możliwość zastąpienia klasycznej przeglądarki plików na  bardziej intuicyjną reprezentację, tj. przestrzenną mapę plików audio. W tej pracy przedstawiam metodę na ocenę wygenerowanych przestrzennych reprezentacji poprzez zastosowanie metod ze statystyki przestrzennej. Przeprowadzam także analizę porównawczą metod ekstrakcji cech oraz redukcji wymiarowości i odkrywam, że połączenie metod PCA + STFT + UMAP daję najlepszą, mimo nieregularnych reprezentacji dla zbioru danych składających się z krótkich nagrań gry na instrumentach.
 \end{abstract}
 
 \pagebreak
 
 \tableofcontents
 
-
-\section{Introduction}
+\chapter{Introduction}
 \label{sec:org6dce8a9}
 The current paradigm for the storage and organization of audio files is that of the classic directory tree. This results in an attribute ontology; files are grouped together into classes (usually by directory name) i.e. ``Drums'', ``Vocals'' and assigned a range of attributes by means of file name or tags. This approach is limited, e.g. the file might be labeled incorrectly or the labels might not addequately describe the sound. Moreover, many properties inherrent to the files are hard to represent e.g. two audio samples might be in separate branches of the taxonomy but be perceptually similar. However, as shown by projects such as The Infinite Drum Machine by Google Creative Lab \cite{inf_drum_machine}, collections of sounds can be explored more naturally with the help of dimensionality reduction techniques.
 
@@ -84,30 +132,30 @@ The current paradigm for the storage and organization of audio files is that of 
 \end{figure}
 
 
-Advances in this area have enabled the intuitive representation of high-dimensional data. The dimension count of a Dataset can be reduced arbitrarily while still preserving information about its intrinsic properties. Commonly, this approach is used to plot Datapoints as clouds in 2d or 3d space, allowing for a depiction of the data which can be naturally grasped by the human mind.
+Advances in this area have enabled the intuitive representation of high-dimensional data. The dimension count of a Dataset can be reduced arbitrarily while still preserving information about its intrinsic properties. Commonly, this approach is used to plot Datapoints as clouds in 2D or 3d space, allowing for a depiction of the data which can be naturally grasped by the human mind.
 
 As with many kinds of information, audio data in its raw form is unfit for such processing. An intermediate representation must to be constructed if any insights are to be gleaned from the data. In order to obtain a representations of audio signals useful to a human observer, a selection of features have to be extracted, which might correspond to certain aspects of the human perception of sound. These can then be used as inputs to produce a visualization by means of dimensionality reduction.
 
 
-\subsection{Related Work}
+\section{Related Work}
 \label{sec:org42eee01}
 
 There have been a number of papers and software projects with a focus on dimensionality reduction as applied to audio datasets. This work is based on previous efforts in this domain, such as those by Hantrakul \& Sarwate \cite{klustr} and McDonald et. al \cite{inf_drum_machine} which I will describe in more detail below. I expand upon their findings by using a dataset of samples containing harmonic data, widening the pool of feature extraction methods and introducing a novel method of assessing the visualizations using Ripley's H function to measure the homogeneity of density distribution of the plots.
 
-\subsubsection{The infinite drum machine}
+\subsection{The infinite drum machine}
 \label{sec:org4401227}
 
-The idea for this work originally came from the excellent web app by McDonald et. al \cite{inf_drum_machine}. The app organized thousands of foley sounds on a 2d plane using the t-SNE technique introduced by van Der Maaten \& Hinton \cite{tsne}. Similar sounding samples were placed close together. Sounds could be navigated and played back by hovering over individual points with the mouse. A sequencer was implemented to enable the arrangement of those sounds into audio loops. As far as my research showed this was one of the first applications introducing the excellent idea of using dimensionality reduction techniques to make intuitive ``maps'' of large audio collections. Since the app was meant more as a proof of concept I immediately saw areas in which it might be extended. Firstly, it only worked on a static dataset, meaning there was no way to make visualizations for other datasets or even add new samples to the existing visualization. Secondly, the functionality was extremely limited by the intended use case. A user is able to select several sounds and use them as samples to program a musical loop and not much besides.
-\subsubsection{Klustr}
+The idea for this work originally came from the excellent web app by McDonald et. al \cite{inf_drum_machine}. The app organized thousands of foley sounds on a 2D plane using the t-SNE technique introduced by van Der Maaten \& Hinton \cite{tsne}. Similar sounding samples were placed close together. Sounds could be navigated and played back by hovering over individual points with the mouse. A sequencer was implemented to enable the arrangement of those sounds into audio loops. As far as my research showed this was one of the first applications introducing the excellent idea of using dimensionality reduction techniques to make intuitive ``maps'' of large audio collections. Since the app was meant more as a proof of concept I immediately saw areas in which it might be extended. Firstly, it only worked on a static dataset, meaning there was no way to make visualizations for other datasets or even add new samples to the existing visualization. Secondly, the functionality was extremely limited by the intended use case. A user is able to select several sounds and use them as samples to program a musical loop and not much besides.
+\subsection{Klustr}
 \label{sec:org02aa748}
 
-Klustr, by Hantrakul \& Sarwate \cite{klustr} is a review of feature extraction methods and dimensionality reduction algorithms as applied to a large audio dataset. They used a dataset of ~10,000 drum samples, shortened to a length of 0.25 seconds. The feature sets used were: Short-term-Fourier-Transform, Mel-Frequency Cepstral Coefficients, various MIR features (RMSE, spectral centroid, spectral crest, spectral flux, spectral rolloff, zero-crossing rate) and finally features extracted by a Wavenet autoencoder. These features were then applied to a dimensionality reduction step using 3 different dimenionality reduction techniques: PCA, t-Sne and UMAP. The scoring function is a combination of the silhouette coefficient \cite{silhouette}, roundness of plots measured by the Polsby-Popper test \cite{popper} and the ratio of overlap of convex hulls of the different drum classes. I have used a similar scoring system, though changing the calculation of the ratio of overlap of convex hulls and adding another scoring method. Their results showed that, for the dataset used, a combination of STFT, PCA and UMAP yielded the best 2D visualization.
+Klustr, by Hantrakul \& Sarwate \cite{klustr} is a review of feature extraction methods and dimensionality reduction algorithms as applied to a large audio dataset. The authors used a dataset of ~10,000 drum samples, shortened to a length of 0.25 seconds. The feature sets used were: Short-time-Fourier-Transform, Mel-Frequency Cepstral Coefficients, various Music Information Retrieval features (RMS, Spectral Centroid, Spectral Crest, Spectral Flux, Spectral Rolloff, Zero-Crossing Rate) and finally features extracted by a Wavenet autoencoder. These features were then applied to a dimensionality reduction step using 3 different dimenionality reduction techniques: PCA, t-SNE and UMAP. The scoring function is a combination of the silhouette coefficient \cite{silhouette}, roundness of plots measured by the Polsby-Popper test \cite{popper} and the ratio of overlap of convex hulls of the different drum classes. I have used a similar scoring system, though changing the calculation of the ratio of overlap of convex hulls and adding another scoring method. The authors determined that, for the dataset used, a combination of STFT, PCA and UMAP yielded the best 2D visualization.
 
-\pagebreak
+\newpage
 
-\section{Background}
+\chapter{Background}
 \label{sec:org4d1b31d}
-\subsection{Music information retreival}
+\section{Music Information Retrieval}
 \label{sec:orge32af72}
 
 With the recent rise of music streaming platforms, which serve millions of users each day, extracting information from music to classify, categorize and build effective recommender systems seems more relevant than ever.
@@ -117,7 +165,7 @@ MIR may be subdivided into two distinct subdomains. The first focused mainly on 
 
 There are a wide range of features which describe different statistical, physical and perceptual aspects of sound. Some of the most commonly used in the field of MIR are described bellow.
 
-% \subsubsection{Signal processing}
+% \subsection{Signal processing}
 % \label{sec:org19fe369}
 % \begin{enumerate}
 % \item The fourier transform
@@ -127,7 +175,7 @@ There are a wide range of features which describe different statistical, physica
 % \item Signal processing and limitations
 % \label{sec:orgcde52dd}
 % \end{enumerate}
-% \subsubsection{Pre processing steps}
+% \subsection{Pre processing steps}
 % \label{sec:orgdd5f8ff}
 % \begin{enumerate}
 % \item Down mixing
@@ -135,9 +183,9 @@ There are a wide range of features which describe different statistical, physica
 % \item Normalization
 % \label{sec:orgda013eb}
 % \end{enumerate}
-\subsubsection{Short-term Fourier Transform (stft)}
+\subsection{Short-time Fourier Transform (STFT)}
 \label{sec:org5ad94c1}
-The Short-term Fourier Transform is a representation of a signal obtained by taking the Fourier transform of short segments of time. The method used to obtain the stft is relatively straightforward. First, the signal is divided into shorter, equal-length segments using a window function. These segments usually have some overalp in order to prevent artifacts of the original signal (so-called spectral leakage) Multiple window functions could be used for this step, however a Hann window is usually used. Usually a window length of 10 to 300ms is chosen. Smith \cite{book} points out three reasons for doing so:
+The Short-time Fourier Transform is a representation of a signal obtained by taking the Fourier transform of short segments of time. The method used to obtain the STFT is relatively straightforward. First, the signal is divided into shorter, equal-length segments using a window function. These segments usually have some overlap in order to prevent artifacts of the original signal (so-called spectral leakage) Multiple window functions could be used for this step, however a Hann window is usually used. Usually a window length of 10 to 300ms is chosen. Smith \cite{book} points out three reasons for doing so:
 
 \begin{itemize}
 \item The human ear analyzes short fragments of signals at a time (10-20ms).
@@ -150,16 +198,16 @@ Next, the Discrete Fourier Transform (DFT) is computed for each segment. We can 
 \begin{figure}[h!]
 \centering
 \includegraphics[width=\textwidth]{./Figures/orig_stft.png}
-\caption{An stft spectrogram}
+\caption{An STFT spectrogram}
 \end{figure}
 
-\subsubsection{MFCC}
+\subsection{Mel Frequency Cepstral Coefficients (MFCC)}
 \label{sec:org657745a}
 
-The motivating idea of mel frequency cepstral coefficients is to compress information about the vocal tract (smoothed spectrum) into a small number of coefficients based on an understanding of the cochlea and how humans interpret sound. The driving force behind this technique is the observation that humans percieve sound in a logarithmic, not linear scale. An example mfcc spectrogram can be seen in \ref{fig:mfcc} There is no one standard way of calculating the coefficients, however the main steps may be summarized as follows:
+The motivating idea of mel frequency cepstral coefficients is to compress information about the vocal tract (smoothed spectrum) into a small number of coefficients based on an understanding of the cochlea and how humans interpret sound. The driving force behind this technique is the observation that humans percieve sound in a logarithmic, not linear scale. An example MFCC spectrogram can be seen in \ref{fig:mfcc}. There is no one standard way of calculating the coefficients, however the main steps may be summarized as follows:
 
 \begin{enumerate}
-    \item Take a Fourier tranform of a short, windowed fragment of the signal (as in the stft)
+    \item Take a Fourier tranform of a short, windowed fragment of the signal (as in the STFT)
     \item Apply the mel filterbank (shown in \ref{fig:mel_filterbank}) to convert the frequencies to the mel scale.
     \item At each of the mel frequencies, take the logarithm of the power. $log(sum(x^{2}))$
     \item Take the discrete cosine transform of the resulting values (express the value of x as a sum of cosine functions of different frequencies).
@@ -172,10 +220,9 @@ The motivating idea of mel frequency cepstral coefficients is to compress inform
 \caption{\label{fig:mel_filterbank}The mel filterbank}
 \end{figure}
 
-\subsubsection{MIR metrics}
+\subsection{MIR metrics}
 \label{sec:org59595af}
-\begin{itemize}
-\item \textbf{ spectral centroid }
+\subsubsection{Spectral Centroid}
 \label{sec:org722ed3e}
 
     The mean of the normalized distribution over frequency per frame of a spectrogram.
@@ -184,137 +231,235 @@ The motivating idea of mel frequency cepstral coefficients is to compress inform
     \begin{itemize}
       \item $f_{k}$ is the frequency value at bin $k$.
       \item $b_{1}$ and $b_{2}$ are the bin boundaries between which to calculate the centroid.
-      \item $s_{k}$ is the spectral value at $k$
+      \item $s_{k}$ is the amplitude at $k$
     \end{itemize}
 
-\item \textbf{ spectral rollof }
+\subsubsection{Spectral Rolloff}
 \label{sec:org8ba1512}
 
     The frequency for each window such that at least $k$ percent of the energy of the spectrum is contained in this frequency bin and the bins bellow. The rolloff point is $i$ such that:
     \[ \sum^{i}_{k=b_{1}}s_{k} = k\sum^{b_{2}}_{k=b_{1}}s_{k} \]
     where:
     \begin{itemize}
-      \item $s_{k}$ is the spectral value at bin $k$.
+      \item $s_{k}$ is the amplitude at bin $k$.
       \item $b_{1}$ and $b_{2}$ are the bin boundaries between which to calculate the spread.
       \item $k$ is the percentage of energy contained between $b_{1}$ and $i$.
     \end{itemize}
 
-\item \textbf{ spectral bandwidth }
+\subsubsection{Spectral Bandwidth }
 \label{sec:org9dcacf6}
 
     Given by:
-    \[ (\sum_{k}s(k)(f(k) - f_{c})^{p})^{\frac{1}{p}}\]
+    \[ (\sum_{k}s_{k}(f_{k} - f_{c})^{p})^{\frac{1}{p}}\]
     where:
     \begin{itemize}
-      \item $s( k )$ is the spectral magnitude at bin $k$.
+      \item $s( k )$ is the amplitude at bin $k$.
       \item $f( k )$ is the bin at $k$.
       \item $f_{c}$ is the spectral centriod at $k$.
     \end{itemize}
 
-\item \textbf{ spectral crest }
+\subsubsection{Spectral Crest}
 \label{sec:org25d762a}
 
     The crest of the power spectrum over time. Given by:
         \[ crest = \frac{max(s_{k}\in[b_{1}, b_{2}])}{\frac{1}{b_{2} - b_{1}}\sum^{b_{2}}_{k=b_{1}}s_{k}} \]
     where:
     \begin{itemize}
-      \item $s_{k}$ is the spectral value at bin $k$.
+      \item $s_{k}$ is the amplitude at bin $k$.
       \item $b_{1}$ and $b_{2}$ are the bin boundaries between which to calculate the crest.
     \end{itemize}
-\item \textbf{ specral flux }
+\subsubsection{Spectral Flux}
 \label{sec:org8d3ce71}
 
     Can intuitively be thought of as how much the signal changes over time. Given by:
         \[ flux(t) = (\sum^{b_{2}}_{k=b_{1}}|s_{k}(t)-s_{k}(t-1)|^{p})^{\frac{1}{p}} \]
     where:
     \begin{itemize}
-      \item $s_{k}$ is the spectral value at bin $k$.
+      \item $s_{k}$ is the amplitude at bin $k$.
       \item $b_{1}$ and $b_{2}$ are the bin boundaries between which to calculate the flux.
       \item $p$ is the normalization type.
     \end{itemize}
 
-\item \textbf{spectral flatness}
+\subsubsection{Spectral Flatness}
 \label{sec:org06c8a6d}
 
     Measures how much noise-like a sound is. Given by:
         \[ flatness = \frac{(\prod^{b_{2}}_{k=b_{1}}s_{k})^{\frac{1}{b_{2}-b_{1}}}}{\frac{1}{b_{2}-b_{1}}\sum^{b_{2}}_{k=b_{1}}s_{k}} \]
     where:
     \begin{itemize}
-      \item $s_{k}$ is the spectral value at bin $k$.
+      \item $s_{k}$ is the amplitude at bin $k$.
       \item $b_{1}$ and $b_{2}$ are the bin boundaries between which to calculate the flux.
     \end{itemize}
-\item \textbf{ RMS }
+\subsubsection{Root-Mean-Square (RMS)}
 \label{sec:orgb1f5108}
 
     The root-mean-square. Given by:
     \[ RMS = \sqrt{\frac{1}{N}\sum^{N}_{n=1}|x_{n}|^{2}}\]
 
-\item \textbf{ zero-crossing rate }
+\subsubsection{Zero-Crossing Rate }
 \label{sec:org7b27629}
 
     How many times a signal crosses zero a given time frame.
-\end{itemize}
-\subsection{Dimensionality reduction}
+\section{Dimensionality reduction}
 \label{sec:orgb502774}
-TODO
-\subsubsection{PCA}
+\subsection{Principal Component Analysis (PCA)}
 \label{sec:org93f3c9b}
-\subsubsection{t-sne}
-\label{sec:orgadaa38f}
-\subsubsection{umap}
-\label{sec:org6a758a8}
 
-\subsection{Evaluation metrics}
+PCA is an orhtogonal linear transformation, which projects data onto a new system of axes. The projection is such that the first axis accounts for the greatest variance in the data, the second axes for the second greatest, and so on. The computation is described in the following steps:
+
+\begin{enumerate}
+\item \textbf{Normalization}.
+
+By transforming each variable to be in the same scale.
+\[ Norm(x) = \frac{x - \mu(X)}{\sigma(X)} \]
+
+\item \textbf{Computing the covariance matrix}
+
+If we have a vector of random variables $(X_{1}, \dots, X_{n})$ then the covariance matrix is defined as:
+
+\newcommand{\Cov}{\mathrm{Cov}}
+\newcommand{\Var}{\mathrm{Var}}
+\newcommand{\E}{\mathrm{E}}
+
+\[
+K_{XX} = \begin{bmatrix}
+\Cov(X_{1}, X_{1}) & \dots & \Cov(X_{1}, X_{n}) \\
+\vdots & \ddots & \\
+\Cov(X_{n}, X_{1}) & \dots & \Cov(X_{n}, X_{n}) \\
+\end{bmatrix}
+\]
+
+Where $\Cov(X_{i}, Y_{i})$ is defined as:
+\[ \Cov(X_{i}, Y_{i}) = \E(X_{i}X_{j}) - \E(X_{i})\E(X_{j}) \]
+
+$\E(X_{i})$ is the expected value given as:
+\[ \E(X_{i}) = \sum_{j = 1}^{k}x_{j}p_{j} \]
+
+and $p_{j}$ is the probability of $x_{j}$.
+
+Since $\Cov(X_{i}, X_{j}) = \mathrm{Var}(X_{j})$, the diagonal is composed of the variances of each variable. Also, since covariance is commutative ($\Cov(X_{i},X_{j}) = \Cov(X_{j},X_{i})$), the matrix is symmetric with respect to the diagonal.
+
+\item \textbf{Calculate the Principal Components of the covariance matrix}
+
+    Principal Components (or eigenvectors) for a linear transformation are the vectors which stay on their own span (the line running through the vectors beginning and end). Knowing this property we can define it as an equation for a transformation $A$, eigenvector $v$ and eigenvalue $\lambda$:
+
+    \begin{equation} \label{eq:1}
+      Av = \lambda v
+    \end{equation}
+
+    After inserting an identity matrix ($I$) and bringing all to the left side:
+    \[ Av - \lambda I v = 0 \]
+
+    Since $v$ must be non-zero we can use the determinant. From this equation we should get a polynomial. The roots of this polynomial give us the eigenvalues.
+    \[ \det(A - \lambda I) = 0 \]
+
+    Once the eigenvalues are known we can easily determine the corresponding eigenvector by solving for $v$ in \ref{eq:1}.
+
+    Now, the eigenvectors can be ordered by their eigenvalues. We can compute the percentage of variance accounted for by each component by dividing the eigenvalue of a component by the sum of eigenvalues.
+
+\item \textbf{Project the standardized data onto axes represented by the Principal Components}
+
+\[ P = C^{T}D^{T} \]
+
+Where $P$ is the projected data, $C$ the matrix containing the Principal Components and $D$ the original, standardized data.
+\end{enumerate}
+
+
+\subsection{t-Distributed Stochastic Neighbour Embedding (t-SNE)}
+\label{sec:orgadaa38f}
+
+t-Distributed Stochastic Neighbour Embedding is a nonlinear dimensionality reduction technique used for embedding high-dimensional datasets into 2 or 3 dimensions. It is based on the original Stochastic Neighbour Embedding (SNE), developed by Roweis and Hinton \cite{sne} in 2002 and improved by Maaten and Hinton \cite{tsne} in 2008 by adding the use of the t-distribution.
+
+The steps for calculating t-SNE may be described as follows:
+
+\begin{enumerate}
+    \item Begin by converting of the Euclidean distances between points in the original dataset into conditional probabilities that represent how similar points are to each other. From the original t-SNE paper: ``The similarity of datapoint $x_{j}$ to datapoint $x_{i}$ is the conditional probability, $p_{j|i}$, that $x_{i}$ would pick $x_{j}$ as its neighbor if  neighbours were picked in proportion to their probability density under a Gaussian centered at $x_{i}$.'' In essence, this means that points which are close together in the original dataset are have a high value $p_{j|i}$ while those which are further away obtain lower values in proportion to their distance. The condition $p_{j|i}$ is given by:
+
+    \[ p_{j|i} = \frac{\exp(\frac{-||x_{i}-x_{j}||^{2}}{2\sigma_{i}^{2}})}{\Sigma_{k \neq i}\exp(\frac{-||x_{i}-x_{k}||^{2}}{2\sigma_{i}^{2}})} \]
+
+    Where $\sigma_{i}$ is the variance of the Gaussian that is centered on datapoint $x_{i}$. There is most likely no single $\sigma_{i}$ optimal for all datapoints as the density of the data will often vary depending upon the point in question. A particular value of the variance gives a probability distribution $P_{i}$ over all the other datapoints. A binary search is performed to find the value of $\sigma_{i}$, that produces a $P_{i}$ with a perplexity value, which is given as a parameter to the t-SNE algorithm, defined as:
+    \[ Perp(P_{i}) = 2^{H(P_{i})} \]
+    where $H(P_{i})$ is the entropy of $P_{i}$:
+
+    \[ H(P_{i}) = - \Sigma_{j}p_{j|i} \log p_{j|i} \]
+
+    The probability is defined as
+    \[ p_{ij} = \frac{p_{j|i} + p_{i|j}}{2N}\]
+    with $p_{ij} = p_{ji}$, $p_{ii} = 0$ and $\Sigma_{i,j}p_{ij} = 1$ so that .
+
+    \item Next, a measure of similarity is defined between two points ($y_{i}$ and $y_{j}$) in the low dimensional embedding. If $d$ is the number of dimensions, then $y_{i} \in I\!R^{d}$.
+    \[ q_{ij} = \frac{\exp(1 + ||y_{i} - y_{j}||^{2})^{-1}}{\Sigma_{k}\Sigma_{l \neq k}\exp( 1 + ||y_{k} - y_{l}||^{2})^{-1}} \]
+    As previously $q_{ii} = 0$. Here, the distribution is Student's t-distribution with one degree of freedom. The distribution is chosen because $(1 + ||y_{i} - y_{j}||^{2})^{-1}$ approaches an inverse square law for large distances between points in the low-dimensional map. This allows dissimilar datapoints to be modeled as far apart in the low-dimensional embedding.
+
+    The points are then distributed randomly throughout the low-dimensional space.
+
+    \item Gradient descent is performed on the low-dimensional embedding of the data in such a way as to minimize the Kullback-Leibler divergence between $p$ and $q$. The divergence is defined as:
+    \[ KL(P || Q) = \Sigma_{i}\Sigma_{j}p_{ij}\log \frac{p_{ij}}{q_{ij}} \]
+
+    The gradient descent minimizes a Kullback-Leibler divergence between a joint probability distribution $P$ and the joint probability distribution $Q$
+    \[ C = KL(P||Q)\]
+
+    In general, the cost is large if widely seperated points in the embedding are used to represent points which are nearby in the original data (using a small $q_{i|j}$ to model a large $p_{j|i}$). Conversely using nearby embedding points to represent widely seperated datapoints has a small cost. This gives a focus on retaining local structure in the embedding. The final gradient descent function is:
+
+    \[ \frac{\delta C}{\delta y_{i}} = 4 \Sigma_{j}(p_{ij} - q_{ij})(y_{i} - y_{j})(1 + ||y_{i} - y_{j}||^{2})^{-1} \]
+
+\end{enumerate}
+
+\subsection{UMAP}
+\label{sec:org6a758a8}
+TODO
+
+\section{Evaluation metrics}
 \label{sec:org078e27c}
 
-Below are detailed description of measures I chose to describe the correctness and usability of plots.
-\subsubsection{Silhoutte score}
+After reducing the dimensionality of the dataset to 2 dimensions, a scatter plot may be constructed with each audio file being represented as a single point. Below are detailed description of measures I chose to describe the correctness and usability of plots.
+\subsection{Silhouette Score}
 \label{sec:org8d91088}
+The Silhouette Score is a measure of how well an algorithm clusters data. More precisely, it measures how closely a datapoint resembles other points from it's own cluster compared with other clusters. The score is generally higher for convex, well-seperated and dense clusters.
 
-
-\[s(i) = \frac{a(i) - b(i)}{\max{a(i), b(i)}} \]
-Where \(a\) is the mean distance between a sample \(i \in C_{i}\) and all other points in the same cluster \(C_{i}\). This gives us how close a point is to the corresponding cluster. It is given by the equation:
-\[ a(i) = \frac{1}{|C_{i}| - 1} \sum_{j \in C_{i}, i \neq j}{d(i,j)}\]
+\[s(i) = \frac{a(i) - b(i)}{\max\{a(i), b(i)\}} \]
+Where $a(i)$ is the mean distance between a sample \(i \in C_{k}\) and all other points in the same cluster \(C_{k}\). This gives us how close a point is to the corresponding cluster. It is given by the equation:
+\[ a(i) = \frac{1}{|C_{k}| - 1} \sum_{j \in C_{k}, i \neq j}{d(i,j)}\]
 where \(d(i,j)\) is the distance between points \(i\) and \(j\).
 
-\(b\) is the mean distance between a sample \(i \in C_{i}\) and all other points in the next nearest cluster \(C_{k}\). Given by:
-\[ b(i) = \min_{k \neq i}{\frac{1}{|C_{k}|} \sum_{j \in C_{k}}{d(i,j)}} \]
+\(b\) is the mean distance between a sample \(i \in C_{k}\) and all other points in the nearest cluster \(C_{l}\). Given by:
+\[ b(i) = \min_{l \neq k}{\frac{1}{|C_{l}|} \sum_{j \in C_{l}}{d(i,j)}} \]
 
 The final Silhouette score for a clustering is the mean Silhouette Coefficient over all the datapoints:
 \[ \frac{1}{|I|}\sum_{i \in I}{s(i)} \]
-Where \(I\) is the set of all datapoints. The final value is in the range \([-1, 1]\) with values closer to -1 indicating incorrect clustering and values closer to +1 indicating highly dense clustering. Scores around zero indicate overlapping clusters. The score is generally higher for convex well-sperated and dense clusters.
+Where \(I\) is the set of all datapoints. The final value is in the range \([-1, 1]\) with values closer to $-1$ indicating incorrect clusters and values closer to $+1$ indicating highly dense clusters. Scores around zero indicate overlapping clusters.
 
-\subsubsection{Roundness}
+\subsection{Roundness}
 \label{sec:org7b61201}
 
 The overall roundness of the plot is calculated by using the method proposed by Polsby \& Popper \cite{popper}:
 \[PP(D) = \frac{4 \pi A(D)}{P(D)^{2}} \]
-where \(D\) is the convex hull of all points of the plot, \(P(D)\) is the circumference and \(A(D)\) the area.
-\subsubsection{Overlap of cluster convex hulls}
+where \(D\) is the convex hull of all points on the plot, \(P(D)\) is the circumference and \(A(D)\) the area.
+\subsection{Overlap of cluster convex hulls}
 \label{sec:org274a5d2}
 
-The measure of overlap of the convex hulls of each class. I calculate this by taking the ratio of the area of the unary union of convex hulls of each class to the sum of areas of the convex hulls of each class:
+The measure of overlap of the convex hulls of each class. I calculate this by taking the ratio of the area of the union of convex hulls of each class to the sum of areas of the convex hulls of each cluster:
 \[ O = \frac{A(U)}{\sum_{c \in C}A(H_{c})} \]
-Where \(A(U)\) is the unary union of all convex hulls, \(A(H_{c})\) is the area of the Hull for class c and \(C\) is the set of all classes.
-\subsubsection{Ripleys K function}
+Where \(A(U)\) is the union of all convex hulls, \(A(H_{c})\) is the area of the Hull for class c and \(C\) is the set of all classes.
+\subsection{Ripley's K function}
 \label{sec:org533d625}
 
-Ripley's K function is sum of the number of points N within a distance r of a selected point p, per area \(\lambda\) surrounding p. This  value is normalized by the total points:
+Ripley's K function is a method used in spatial analysis to describe how a collection of points are distributed over a given area. It provides a measure of how clustered, dispersed or randomly distributed the measured phenomenon appears to be in the area of interest. The function is sum of the number of points $N$ within a distance $r$ of a selected point $p,$ per area \(\lambda\) surrounding $p.$ This value is normalized by the total number of points:
 \[K(r) = \frac{\sum_{i=1}^{n}N_{p_{i}}(r)}{n \lambda}\]
-It may be interpreted as a meassure of deviation of a given distribution from the random Poisson distribution. In essence, this let's us measure the homogeneity of the spatial density of the data points. The expected value of \(K(r)\) for a random distribution is \(\pi r^{2}\). If the output value deviates from this value, this indicates clustering or dispersion in the data. The K-function may be normalized so that the expected value is r:
+It may be interpreted as a meassure of deviation of a given distribution from the random Poisson distribution. In essence, this let's us measure the homogeneity of the spatial density of the data points. The expected value of \(K(r)\) for a random distribution is \(\pi r^{2}\). If the output value deviates from this value, this indicates clustering or dispersion in the data. The K-function may be normalized so that the expected value is $r$:
 \[L(r) = \sqrt[]{K(r)/\pi}\]
 Further normalization gives an expected value of 0, called the H-function:
 \[H(r) = L(r) - r\]
-Now, a positive value of \(H(r)\) indicates that the data is clustered at the scale of r. If the value is negative, the data is dispersed.
+Now, a positive value of \(H(r)\) indicates that the data is clustered at the scale of $r$. If the value is negative, the data is dispersed.
 
-\pagebreak
+\newpage
 
-\section{Experiment design and overview}
+\chapter{Experiment design and overview}
 \label{sec:orga220b5b}
-\subsection{Dataset}
+\section{Dataset}
 \label{sec:orgac308b8}
 
-I used the Medley-Solos-db dataset assembled by Lostanlen et al. \cite{medley}. Downloaded through the mirdata python library \cite{bittner_fuentes_2019}. The dataset consists of 21572 mono WAV files sampled at 44.1 kHz at a bit depth of 32. Every audio clip has a duration of 2972 milliseconds. The data is split into 3 subsets: training, validation and test. Each sample belongs to one instrument category among a taxonomy of 8. Each instrument class was given a distinct color for easier recognition on the plots as seen in \ref{fig:8-plots}. I use the training subset of this dataset. The distribution of sounds is summarized in table \
+I used the Medley-Solos-db dataset assembled by Lostanlen et al. \cite{medley}. Downloaded through the \textit{ mirdata } Python library \cite{bittner_fuentes_2019}. The dataset consists of 21572 mono WAV files sampled at 44.1 kHz at a bit depth of 32. Every audio clip has a duration of 2972 milliseconds. The data is split into 3 subsets: training, validation and test. Each sample belongs to one instrument category among a taxonomy of 8. Each instrument class was given a distinct color for easier recognition on the plots as seen in \ref{fig:8-plots}. I use the training subset of this dataset. The distribution of sounds is summarized in table \
 
 \begin{table}[h!]
 \centering
@@ -335,28 +480,29 @@ clarinet & elec. guitar & f. singer & flute & piano & tenor sax & trumpet & viol
 \label{fig:8-plots}
 \end{figure}
 
-\subsection{The processing pipeline}
+\section{The processing pipeline}
 \label{sec:org82c3cb3}
 
-To produce a 2d scatter plot of the dataset, the original audio files, each an array of 65,536 floating-point numbers, has to be reduced to 2 values.
-The process can be thought of as having 4 distinct steps:
+To produce a 2D scatter plot of the dataset, the original audio files, each an array of 65,536 floating-point numbers, has to be reduced to 2 values.
+The process can be thought of as having 4 distinct steps. A short overview of the pipeline is given below. Each step is then described in greater detail.
+
 \begin{enumerate}
 \item \textbf{ Preprocessing. }
 
 The audio files are ingested in a format which is easy to run calculations on. In this case a numpy ndarray.
 \item \textbf{ Feature Extraction. }
 
-Some characteristics of the sound are extracted using a selection of algorithms and mathematical tools. These are then used as an intermediate representation of the sound for further processing.
+Characteristics of the sound are extracted using a selection of algorithms and mathematical tools found in \ref{table:all_features}. These are then used as an intermediate representation of the sound for further processing.
 \item \textbf{ Feature manipulation }
 
-Some of the features had to be further modified after extraction. The operations included reshaping feature matrices and aggregation.
+Some of the features had to be further modified after extraction. The operations include reshaping feature matrices and aggregation.
 \item \textbf{ Dimensionality Reduction. }
 
-After selecting a set of features to serve as a representation of the original files an algorithm is applied to reduce them to two dimensions.
+After selecting a set of features to serve as a representation of the original files PCA, t-SNE or UMAP is used to reduce them to two dimensions.
 \end{enumerate}
-Once the plots have been generated, the one which most closely fits the defined criteria must be chosen. As such, an extra, fourth step in which plots are evaluated must be added. Each of these steps will be described in greater detail in the next section.
+Once the plots have been generated, the one which most closely fits the defined criteria must be chosen. As such, an extra, fourth step in which plots are evaluated is added.
 
-\subsection{Preprocessing}
+\section{Preprocessing}
 \label{sec:org1f10704}
 
 The data is ingested using the Librosa python library \cite{librosa} used for music and audio analysis. The ``librosa.load'' method was used to convert the WAV files to a float32 numpy ndarray.
@@ -369,17 +515,17 @@ The data is ingested using the Librosa python library \cite{librosa} used for mu
 
 After loading the samples, the amplitudes were normalized to be in the range \([-1, 1]\) by dividing by the max amplitude value for the sample. The data loaded in such a way was stored in a hdf5 file.
 
-\subsection{Feature Extraction}
+\section{Feature Extraction}
 \label{sec:org8d85bd5}
 
 Finding a compact representation of phenomena is crucial for machine learning processess, including dimensionality reduction. To produce a meaningful representation of the raw data, useful to machines as well as humans, the step of extracting features is required. It can be even thought of as a preliminary dimensionality reduction technique as a raw signal consisting of many thousands of values to just a handful, which, with luck, provide an adequate representation of useful characteristics, innate to the signal. Most of the feature extraction steps were calculated using the implementations found in the librosa library.
 
 
-\subsubsection{STFT}
+\subsection{Short-time Fourier Transform (STFT)}
 \label{sec:org0c9e9c5}
 
-The Short-time Fourer Transform is a basic representation in signal processing, which captures the change in frequency content over time.
-To extract the stft, I used the librosa implentation. I decided to take the STFT over 32 windows in both the time and frequency domains, finally giving a 32x32 matrix:
+The Short-time Fourier Transform is a basic representation in signal processing, which captures the change in frequency content over time.
+To extract the STFT, I used the librosa implementation. I decided to take the STFT over 32 windows in both the time and frequency domains, finally giving a 32x32 matrix:
 
 \begin{figure}[H]
 \centering
@@ -387,11 +533,11 @@ To extract the stft, I used the librosa implentation. I decided to take the STFT
 \caption{STFT of the sample in figure \ref{fig:example-fig}}
 \end{figure}
 
-\subsubsection{MFCC}
+\subsection{MFCC}
 \label{sec:org70aa9fd}
 
-The Mel-Frequency Cepstral Coefficients are a heavily used in both speech recognition and MIR. \cite{medium,klustr,Racharla_2020,article}
-I used the librosa implementation to calculate the mfcc's. I decided to go with a Cepstral Coefficient count of 20 and hop length of 256, resulting in a feature size of 20x257:
+The Mel-Frequency Cepstral Coefficients are a heavily used in both speech recognition and Music Information Retrieval \cite{medium,klustr,Racharla_2020,article}.
+I used the librosa implementation to calculate the MFCC's. I decided to go with 20 Cepstral Coefficient and a hop length of 256, resulting in a feature size of 20x257:
 
 \begin{figure}[H]
 \centering
@@ -399,7 +545,7 @@ I used the librosa implementation to calculate the mfcc's. I decided to go with 
 \caption{\label{fig:mfcc}MFCC of the sample in figure \ref{fig:example-fig}}
 \end{figure}
 
-\subsubsection{MIR Metrics}
+\subsection{Music Information Retrieval Metrics}
 \label{sec:orgb3249b0}
 
 A number of metrics from the field of audio analysis has also found to be useful when extracting timbre information from audio signals \cite{article,klustr}. In my case these will include:
@@ -420,10 +566,10 @@ A number of metrics from the field of audio analysis has also found to be useful
 \caption{Graphs of MIR features for the sample in figure \ref{fig:example-fig}}
 \end{figure}
 
-\subsection{Feature Manipulation}
+\section{Feature Manipulation}
 \label{sec:org694b75f}
 
-Many of the features are of different shapes and sizes. Since the matrix passed to the dimensionality reduction algorithm must be rectangular (i.e. a vector for each sample) a way must be found to force the features into a 1-d vector of values. I have used two approaches.
+Many of the features are of different shapes and sizes. Since the matrix passed to the dimensionality reduction algorithm must be rectangular (i.e. a vector for each sample) a way must be found to force the features into a 1D vector of values. I have used two approaches.
 
 \begin{itemize}
 \item \textbf{ Flattening }
@@ -432,76 +578,83 @@ If the feature matrix is 2 dimensional, we can simply concatenate consecutive ro
 
 \item \textbf{ Aggregation over selected axis }
 
-Another approach to reducing feature dimensions is that of aggregation. We can calculate an aggregate value over a particular axis, in essence reducing the dimensionality of the matrix by this axis. We can then treat the reduced matrix as any other feature vector. As suggested by Dupont et al. \cite{Dupont_2013} and Fedden \cite{medium}, I chose three aggregation functions: the average, standard deviation, and the mean of the difference between consecutive values in the vector.
+Another approach to reducing feature dimensions is that of aggregation. We can calculate an aggregate value over a particular axis, in essence reducing the dimensionality of the matrix by this axis. We can then treat the reduced matrix as any other feature vector. As suggested by Dupont et al. \cite{Dupont_2013} and Fedden \cite{medium}, I chose three aggregation functions: the \textit{ average }, \textit{standard deviation}, and the \textit{mean of the difference} between consecutive values in the vector.
 
 In my case this procedure was applied to obtain the following four features:
 \begin{itemize}
-\item raw stft, reducing size from 32x32 -> 32x3. I call this ``statistically shortened stft''
-\item raw mfcc, reducing size from 20x257 -> 20x3. I call this ``statistically shortened mfcc''
-\item a second time to the statistically shortened stft, reducing size from 32x3 -> 3. I call this ``vertically statistically shortened stft''
-\item a second time to the statistically shortened mfcc, reducing size from 20x3 -> 3. I call this ``vertically statistically shortened mfcc''
+\item Raw STFT, reducing size from 32x32 -> 32x3. I call this ``statistically shortened STFT''
+\item Raw MFCC, reducing size from 20x257 -> 20x3. I call this ``statistically shortened MFCC''
+\item A second time to the statistically shortened STFT, reducing size from 32x3 -> 3. I call this ``vertically statistically shortened STFT''
+\item A second time to the statistically shortened MFCC, reducing size from 20x3 -> 3. I call this ``vertically statistically shortened MFCC''
 \end{itemize}
 \end{itemize}
 
-Inspired by the successes of Klustr \cite{klustr}, with using a preliminary dimensionality reduction step on raw features using PCA before feeding applying dimensionality reduction proper, I also tried this approach on the raw stft and mfcc features. I decided to make features out of the top $n$ principal components, where $n$ took the values: [3, 5, 8, 12, 20].
-
+Inspired by the successes of Klustr \cite{klustr}, with using a preliminary dimensionality reduction step on raw features using PCA before feeding applying dimensionality reduction proper, I also tried this approach on the raw STFT and MFCC features. I decided to make features out of the top $n$ principal components, where $n$ took the values: [3, 5, 8, 12, 20].
+\\
 The final list of features is shown in table \ref{table:all_features}
 
 \begin{table}[h!]
-\centering
+\makebox[\textwidth][c]{
 \begin{tabular}{ |c|c|c| }
 \hline
 Metric Name & Dimensions & Description \\
 \hline
-stft & 32x32 & Original stft \\
-stat stft & 32x3 & statistically shortened stft \\
-vert stat stft & 3 & vertically statistically shortened stft \\
-pca 3 stft & 3 & First 3 principal components of the original stft \\
-pca 5 stft & 3 & First 5 principal components of the original stft \\
-pca 8 stft & 8 & First 8 principal components of the original stft \\
-pca 12 stft & 12 & First 12 principal components of the original stft \\
-pca 20 stft & 20 & First 20 principal components of the original stft \\
-mfcc & 20x257 & Original mfcc \\
-stat mfcc & 20x3 & statistically shortened mfcc \\
-vert stat mfcc & 3 & vertically statistically shortened mfcc \\
-pca 3 mfcc & 3 & First 3 principal components of the original mfcc \\
-pca 5 mfcc & 3 & First 5 principal components of the original mfcc \\
-pca 8 mfcc & 8 & First 8 principal components of the original mfcc \\
-pca 12 mfcc & 12 & First 12 principal components of the original mfcc \\
-pca 20 mfcc & 20 & First 20 principal components of the original mfcc \\
-stat stft + stat mfcc & 52x3 & stat mfcc appended to stat stft \\
+STFT & 32x32 & Original STFT \\
+stat STFT & 32x3 & statistically shortened STFT \\
+vert stat STFT & 3 & vertically statistically shortened STFT \\
+PCA 3 STFT & 3 & First 3 principal components of the original STFT \\
+PCA 5 STFT & 3 & First 5 principal components of the original STFT \\
+PCA 8 STFT & 8 & First 8 principal components of the original STFT \\
+PCA 12 STFT & 12 & First 12 principal components of the original STFT \\
+PCA 20 STFT & 20 & First 20 principal components of the original STFT \\
+MFCC & 20x257 & Original MFCC \\
+stat MFCC & 20x3 & statistically shortened MFCC \\
+vert stat MFCC & 3 & vertically statistically shortened MFCC \\
+PCA 3 MFCC & 3 & First 3 principal components of the original MFCC \\
+PCA 5 MFCC & 3 & First 5 principal components of the original MFCC \\
+PCA 8 MFCC & 8 & First 8 principal components of the original MFCC \\
+PCA 12 MFCC & 12 & First 12 principal components of the original MFCC \\
+PCA 20 MFCC & 20 & First 20 principal components of the original MFCC \\
+stat STFT + stat MFCC & 52x3 & stat MFCC appended to stat STFT \\
 all mir & 8x3 & statistically shortened mir metrics \\
 reduced mir & 6x3 & mir metrics without rms and centroid \\
-pca 3 mfcc + reduced mir & 7x3 & reduced mir with pca 3 mfcc \\
-pca 3 stft + reduced mir & 7x3 & reduced mir with pca 3 stft \\
+PCA 3 MFCC + reduced mir & 7x3 & reduced mir with PCA 3 MFCC \\
+PCA 3 STFT + reduced mir & 7x3 & reduced mir with PCA 3 STFT \\
 \hline
 \end{tabular}
+}
 \caption{All feature sets used for the dimensionality reduction step}
 \label{table:all_features}
 \end{table}
 
-\subsection{Dimensionality Reduction}
+\section{Dimensionality Reduction}
 \label{sec:orgfde1e30}
 
 The last step in the pipeline is the final dimension reduction of the final collection of features to just 2 values. 4 different algorithms were used in this step:
 \begin{itemize}
-\item Principal Component Analysis
+\item \textbf{Principal Component Analysis}
 
 The basic, tried-and-tested dimensionality reduction method. This method doesn't accept any additional parameters except the number of Principal Componenets to output. As such, for each collection of features we obtain 1 plot.
-\item T-stochastic neighbour embedding
+\item \textbf{t-Stochastic Neighbour Embedding}
 
-What has come to be a widespead technique in the field of machine learning for it's ability to create useful 2d maps of data. Used by McDonal et al.  and Hantrakul et al. to create visualizations of audio data. T-sne's uses extend far beyond just audio data, however. It is commonly used in the field of single-cell genomics to visualize human genetic data \cite{doi:10.1142/S0219720017500172} and is able to seperate samples from different continents and even reflects some local, sub-continental patterns.
+What has come to be a widespead technique in the field of machine learning for it's ability to create useful 2D maps of data. Used by McDonal et al. and Hantrakul et al. to create visualizations of audio data. t-SNE's uses extend far beyond just audio data, however. It is commonly used in the field of single-cell genomics to visualize human genetic data \cite{doi:10.1142/S0219720017500172} and is able to seperate samples from different continents and even reflects some local, sub-continental patterns.
 
 3 parameters influence the visualization in a significant way:
 \begin{itemize}
-\item Perplexity, which can be interpreted as how much attention the algorithm should give to local or global structure. In the original article van der Maaten \& Hinton suggested that perplexity values should generally fall in the range 5-50. In my case, smaller values tend to result in plots with less dense clusters with higher values giving more well-seperated clusters. I chose the values [5, 10, 20, 40, 60] as parameters for the t-sne plots.
-\item The learning rate. Usually falls in the range [10-10000]. I however determined that values higher than 1000 seemed to lose global structure. I chose the values [20, 50, 100, 200, 300]
-\item Iterations. I decided to go with a constant value of 3000. After heuristic tests I determined that the plots seemed to be stable for this dataset.
+  \item \textbf{Perplexity}
+
+    Which can be interpreted as how much attention the algorithm should give to local or global structure. In the original article van der Maaten \& Hinton suggested that perplexity values should generally fall in the range 5-50. In my case, smaller values tend to result in plots with less dense clusters with higher values giving more well-seperated clusters. I chose the values [5, 10, 20, 40, 60] as parameters for the t-SNE plots.
+  \item \textbf{Learning rate}
+
+    Usually falls in the range [10-10000]. I however determined that values higher than 1000 seemed to lose global structure. I chose the values [20, 50, 100, 200, 300]
+  \item \textbf{Number of iterations}
+
+    I decided to go with a constant value of 3000. After heuristic tests I determined that the plots seemed to be stable for this dataset.
 \end{itemize}
 
-\item Uniform Manifold Approximation and Projection
+\item \textbf{Uniform Manifold Approximation and Projection}
 
-A relatively new dimensionality method. It is very effective at preserving both the local and global structure of the original data in it's projections. Similarly to t-sne it is also based on manifold learning. The important hyperparameters are:
+A relatively new dimensionality reduction method. It is very effective at preserving both the local and global structure of the original data in it's projections. Similarly to t-SNE it is also based on manifold learning. The important hyperparameters are:
 \begin{itemize}
 \item \textbf{ number of neighbours }
 
@@ -516,12 +669,12 @@ is the value used by the algorithm to determine what the minimum distance points
 \begin{figure*}[h!tbp]
 \centering
 \makebox[\textwidth]{\includegraphics[height=.65\paperheight, trim=0 0 0 15cm]{./Figures/umap_stft_gridsearch.png}}
-\caption{A Umap grid search over stft.\\ It is clear to see that lower values of hyperparameters (top left) give more densely clustered plots with a focus on the local structure, while higher values (bottom right) are more distributed and focus more on global relationships.}
+\caption{A UMAP parameter sweep with STFT as the feature.\\ It is clear to see that lower values of hyperparameters (top left) give more densely clustered plots with a focus on the local structure, while higher values (bottom right) are more distributed and focus more on global relationships.}
 \end{figure*}
 
-Since the objective is to make a round and homogenously dispersed plot, while still keeping the clusters seperate, I suspect that values, which strike a balance between being globally spread out and having enough detailed local structure to seperate the clusters will be evaluated as teh best.
+Since the objective is to make a round and homogenously dispersed plot, while still keeping the clusters seperate, I suspect that values which strike a balance between being globally spread out and having enough detailed local structure to seperate the clusters will be evaluated as the best.
 
-\subsection{Scoring the plots}
+\section{Scoring the plots}
 \label{sec:org007743d}
 
 The experiment was designed with a particular goal in mind - generating plots from the original audio data which would enable an intuitive grasp of the dataset. In order to achieve this, I define several metrics for evaluating the plots:
@@ -533,101 +686,109 @@ Each plot produced is scored using these metrics. Since each of these metrics ha
 \[T(p) = 2silhouette(p) + 2ripley(p) + overlap(p) + roundness(p) \]
 Where:
 \begin{itemize}
-\item \(silhouette(p)\) is the normalized Silhouette score. Because the silhouette metric is in the range \([-1, 1]\) the value must be shifted to be in range \([0, 1]\): \(s(p) + 1\). Where \(s(p)\) is the Silhouette score for the plot. The shifted silhouette score is then normalized relative to the max silhouette score, finally giving:
+\item \textbf{\(silhouette(p)\)} is the normalized Silhouette score. Because the silhouette metric is in the range \([-1, 1]\) the value must be shifted to be in range \([0, 1]\): \(s(p) + 1\). Where \(s(p)\) is the Silhouette score for the plot. The shifted silhouette score is then normalized relative to the max silhouette score, finally giving:
 \[silhouette(p) = \frac{s(p) + 1}{\max\{s(p) | p \in P\}}\]
-\item \(ripley(p)\) is a metric based on the Ripley H-function. First, the average Ripley H-function is taken for plot \(p\) for radii in the set: \(R = (0.05, 0.1, 0.25, 0.5)\) \(\sum_{r \in R} H_{p}(r)\) Since the H-function can assume values both negative and positive, I decided to take the absolute value. This causes a loss of information, since negative values indicate dispersion and positive ones indicate clustering. However, this distinction is not important for the purposes of the experiment. The only information important to us is how much the plot deviates from being uniformly dense. Since we want values close to 1 to indicate a better score I take the inverse, giving:
+\item \textbf{ \(ripley(p)\) } is a metric based on the Ripley H-function. First, the average Ripley H-function is taken for plot \(p\) for radii in the set: \(R = (0.05, 0.1, 0.25, 0.5)\) \(\sum_{r \in R} H_{p}(r)\) Since the H-function can assume values both negative and positive, I decided to take the absolute value. This causes a loss of information, since negative values indicate dispersion and positive ones indicate clustering. However, this distinction is not important for the purposes of the experiment. The only information important to us is how much the plot deviates from being uniformly dense. Since we want values close to 1 to indicate a better score I take the inverse, giving:
 \[H(p) = abs(\frac{\sum_{r \in R} H_{p}(r)}{|R|})^{-1}\]
 With \(H_{p}(r)\) being Ripley's H-function for plot \(p\) taken for radius \(r\). Finally, the value is normalized relative to the max value for all plots.
 \[ ripley(p) = \frac{H(p)}{ \max \{ H(p)| p \in P \}} \]
-\item \(overlap(p)\) is the ratio of overlap of convex hulls for the clusters to the area of the whole plot. Normalized relative to the max value for all plots:
+\item \textbf{ \(overlap(p)\) } is the ratio of overlap of convex hulls for the clusters to the area of the whole plot. Normalized relative to the max value for all plots:
 \[ overlap(p) = \frac{O(p)}{ \max \{ O(p)| p \in P \}} \  \]
-\item \(roundness(p)\) is calculated using the Polsby-Popper method. Also normalized relative to the max value for all plots:
+\item \textbf{ \(roundness(p)\) } is calculated using the Polsby-Popper method. Also normalized relative to the max value for all plots:
 \[ roundness(p) = \frac{PP(p)}{ \max \{ PP(p)| p \in P \}} \  \]
 \end{itemize}
 
-\pagebreak
+\newpage
 
-\section{Experiment Evaluation}
+\chapter{Experiment Evaluation}
 \label{sec:org8d9a4f0}
-\subsection{Overall Results}
+\section{Overall Results}
 \label{sec:org5ce221c}
 
-\begin{figure*}[htbp]
+\begin{figure*}[h!tbp]
 \centering
 \makebox[\textwidth]{\includegraphics[width=.9\paperwidth, trim=0 0 0 10cm]{./Figures/best_overall_per_feature.png}}
 \caption{\label{fig:best_overall}The best scoring plots for each feature set.}
 \end{figure*}
 
-The final, best scoring plots for different feature sets are shown in \ref{fig:best_overall}. Most of the plots seperate the instrument classes relatively well They also seem to exhibit a round and fairly uniform structure. The exceptions are plots which have gone through a preliminary pca reduction step, leaving 3 prinicipal components. These are labeled \textit{pca 3 stft} and \textit{pca 3 mfcc}. The interesting, string-shaped plots only appear with the combination of \textit{ pca 3 stft } and \textit{ pca 3 mfcc } with \textit{ umap }. This is most probably a side-effect of the way in which umap builds it's high dimensional representation of the data by using a fuzzy simplical complex. Umap always connects points to their nearest neighbour in the high-dimensional representation. I hypothesize that the string-like shapes are the joined nearest neighbours. Umap then decides that the global structure contained in the 3d pca plot shown in \ref{fig:3d_pca} is best represented by spacing the strings as visible in the plots. A closer look at the umap grid search (\ref{fig:umap_3d_pca_grid_search}) reveals that this is most probably  the case. The more nearest neighbours the umap algorithm uses to determine connectedness in the high-dimensional representation, the more pronounced becomes the pattern.
+The final, best scoring plots for different feature sets are shown in \ref{fig:best_overall}. Most of the plots seperate the instrument classes relatively well They also seem to exhibit a round and fairly uniform structure. The exceptions are plots which have gone through a preliminary PCA reduction step, leaving 3 prinicipal components. These are labeled \textit{PCA 3 STFT} and \textit{PCA 3 MFCC}. The interesting, string-shaped plots only appear with the combination of \textit{ PCA 3 STFT } and \textit{ PCA 3 MFCC } with \textit{ UMAP }. This is most probably a side-effect of the way in which UMAP builds it's high dimensional representation of the data by using a fuzzy simplical complex. UMAP always connects points to their nearest neighbour in the high-dimensional representation. I hypothesize that the string-like shapes are the joined nearest neighbours. UMAP then decides that the global structure contained in the 3d PCA plot shown in \ref{fig:3d_pca} is best represented by spacing the strings as visible in the plots. A closer look at the UMAP grid search (\ref{fig:umap_3d_pca_grid_search}) reveals that this is most probably  the case. The more nearest neighbours the UMAP algorithm uses to determine connectedness in the high-dimensional representation, the more pronounced becomes the pattern.
 
-\begin{figure}[hb]
+\begin{figure}[h!b]
 \centering
 \makebox[\textwidth]{\includegraphics[width=\textwidth]{./Figures/3d_pca_mfcc.png}}
-\caption{\label{fig:3d_pca}A plot of the pca 3 mfcc feature}
+\caption{\label{fig:3d_pca}A plot of the PCA 3 MFCC feature}
 \end{figure}
 
 \begin{figure*}[h!tbp]
 \centering
 \makebox[\textwidth]{\includegraphics[height=.65\paperheight, trim=0 0 0 15cm]{./Figures/umap_grid_search_pca_3.png}}
-\caption{A umap grid search on the pca 3 mfcc feature. As the value of n neighbours increases, the string like pattern gets more pronounced.}
+\caption{A UMAP grid search on the PCA 3 MFCC feature. As the value of $n$ neighbours increases, the string-like pattern gets more pronounced.}
 \label{fig:umap_3d_pca_grid_search}
 \end{figure*}
 
 This phenomenon is all the more interesting when we take a look at the top scoring plots overall, shown in \ref{fig:top_overall}. All the best scoring plots are from this particular feature set.
 
-This result is counterintuitive. It seems that many of the other plots would score better on each metric. The plots seem to be less clustered and less uniformly distributed. When looking closely at the values, we can see that the silhouette and and overlap scores for the \textit{pca 3} plots are very close the scores of the other plots. However, when we look at the Ripley score, we see that these plots have values significantly closer to zero (meaning a higher score after normalization).
+This result is counterintuitive. It seems that many of the other plots would score better on each metric. The plots seem to be less clustered and less uniformly distributed. When looking closely at the values, we can see that the silhouette and and overlap scores for the \textit{PCA 3} plots are very close the scores of the other plots. However, when we look at the Ripley score, we see that these plots have values significantly closer to zero (meaning a higher score after normalization).
 
-\begin{figure*}[htbp]
+\begin{figure*}[h!tbp]
 \centering
 \makebox[\textwidth]{\includegraphics[height=.65\paperheight, trim=0 0 0 15cm]{./Figures/top9_with_pca.png}}
 \caption{The top 9 scoring plots overall}
 \label{fig:top_overall}
 \end{figure*}
 
-\subsection{The Ripley metric}
+\section{The Ripley metric}
 
-Looking at the top scoring plots for the ripley metric presented in \ref{fig:top_ripley}, it is clear that the pca 3 plots do indeed score very highly in this regard. The first 8 top scoring ripley metrics come from a combination of pca 3 + umap. My hypothesis is that each of the string like shapes is composed of points which are placed at distance apart from each other equal to that of the min dist umap parameter. \ref{fig:umap_3d_pca_grid_search} seems to show this as the points on the strings get slightly more farther apart as the \textit{min dists} parameter increases. Also umap seems to have placed the strings themselves seem to be roughly equally spaced from each other. Thanks to this, if we take a circle from any point, we obtain an approximately equally distributed number of points. Hence, the high score of these plots for the Ripley metric. Since the points in the strings are tightly packed the Silhouette intra-cluster distance is low, the silhouette measure interprets as relatively well-clustered.
+Looking at the top scoring plots for the ripley metric presented in \ref{fig:top_ripley}, it is clear that the PCA 3 plots do indeed score very highly in this regard. The first 8 top scoring ripley metrics come from a combination of PCA 3 + UMAP. My hypothesis is that each of the string like shapes is composed of points which are placed at distance apart from each other equal to that of the min dist UMAP parameter. \ref{fig:umap_3d_pca_grid_search} seems to show this as the points on the strings get slightly more farther apart as the \textit{min dists} parameter increases. Also UMAP seems to have placed the strings themselves seem to be roughly equally spaced from each other. Thanks to this, if we take a circle from any point, we obtain an approximately equally distributed number of points. Hence, the high score of these plots for the Ripley metric. Since the points in the strings are tightly packed the Silhouette intra-cluster distance is low, the silhouette measure interprets as relatively well-clustered.
 
-\begin{figure*}[htbp]
+\begin{figure*}[h!tbp]
 \centering
 \makebox[\textwidth]{\includegraphics[height=.65\paperheight, trim=0 0 0 15cm]{./Figures/top9_ripley.png}}
 \caption{Top 9 scoring plots according to the Ripley metric}
 \label{fig:top_ripley}
 \end{figure*}
 
-Let's see what the best plots are if we exclude the pca 3 features. See \ref{fig:top9_no_pca3}. The plots are drastically different. A lot more inline with what might have been expected. It is interesting to see that the similar behaviour is present here also, although this time coming from a different feature, namely \textit{reduced mir}. All these plots are also a result of umap.
+Let's see what the best plots are if we exclude the PCA 3 features. See \ref{fig:top9_no_pca3}. The plots are drastically different. A lot more inline with what might have been expected. It is interesting to see that the similar behaviour is present here also, although this time coming from a different feature, namely \textit{reduced mir}. All these plots are also a result of UMAP.
 
-\begin{figure*}[htbp]
+\begin{figure*}[h!tbp]
 \centering
 \makebox[\textwidth]{\includegraphics[height=.65\paperheight, trim=0 0 0 15cm]{./Figures/top9_no_pca3.png}}
-\caption{Top 9 scoring plots excluding the pca 3 features}
+\caption{Top 9 scoring plots excluding the PCA 3 features}
 \label{fig:top9_no_pca3}
 \end{figure*}
 
-\subsection{The Silhouette Measure}
+\section{The Silhouette Measure}
 
 But what happends if we remove the Ripley metric altogether? In \ref{fig:top9_no_ripley} we can see the top 9 plots which scored highest without the Ripley metric. The difference is enormous. It is clear to see why this metric is so crucial for good-looking plots. These plots exhibit very clear and cleanly seperated clusters. These plots, however, would not be useful for the intended use case as the clusters are \textit{too} dense and would be hard to navigate. This is why the Ripley metric is indespensable.
 
-% \begin{figure*}[htbp]
-% \centering
-% \makebox[\textwidth]{\includegraphics[height=.65\paperheight, trim=0 0 0 15cm]{./Figures/top9_without_ripley.png}}
-% \caption{Top 9 scoring plots for metrics without the ripley measure}
-% \label{fig:top9_no_pca3}
-% \end{figure*}
+\begin{figure*}[h!tbp]
+\centering
+\makebox[\textwidth]{\includegraphics[height=.65\paperheight, trim=0 0 0 15cm]{./Figures/top9_without_ripley.png}}
+\caption{Top 9 scoring plots for metrics without the ripley measure}
+\label{fig:top9_no_pca3}
+\end{figure*}
 
 % TODO compare stat shortened metrics to non stat shortened
 
-\subsection{Future work}
+\section{Future work}
 \label{sec:org1054556}
 
 Finding the correct metrics is crucial to correctly solving this problem. While it is probable that a combination of clustering and spatial measurements is the correct way to approach the problem, more work is still needed to find a set of metrics which would provide an optimal way of evaluating the plots in terms of both how well the timbral characteristics of the dataset are reflected (i.e how well the sounds are clustered) and how comfortable the plot would be to use as a file browser (shape and density distribution).
 
 In addition to this even more feature extraction methods such as wavenet autoencoders and methods from the field of MIR could be tested. There are also many more dimensionality reduction methods to experiment with.
-\subsection{Conclusion}
+\section{Conclusion}
 \label{sec:orgf2b4e9e}
 
-The findings in this thesis where unexpected. Because of the findings of Hantrakul and Sarwate \cite{klustr}, I expected the combination of pca + stft + umap to do well. However the shape of the best-scoring plots where a big surprise and make the end results a lot more interesting than anticipated.
+The findings in this thesis where unexpected. Because of the findings of Hantrakul and Sarwate \cite{klustr}, I expected the combination of PCA + STFT + UMAP to do well. However the shape of the best-scoring plots where a big surprise and make the end results a lot more interesting than anticipated.
 
 \bibliography{Bibliography}
 \bibliographystyle{plain}
+
+\appendix
+\appendixpage
+\addappheadtotoc
+
+\chapter{Source Code}
+https://github.com/luk-pio/audioviz
+
 \end{document}

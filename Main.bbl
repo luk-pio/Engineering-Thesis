@@ -1,0 +1,116 @@
+\begin{thebibliography}{10}
+
+\bibitem{silhouette}
+sklearn metrics silhouette score.
+
+\bibitem{bittner_fuentes_2019}
+Rachel~M Bittner, Magdalena Fuentes, David Rubinstein, Andreas Jansson, Keunwoo
+  Choi, and Thor Kell.
+\newblock mirdata: Software for reproducible usage of datasets.
+\newblock In {\em International Society for Music Information Retrieval (ISMIR)
+  Conference}, 2019.
+
+\bibitem{Chakroborty2006FusionOA}
+S.~Chakroborty, A.~Roy, and G.~Saha.
+\newblock Fusion of a complementary feature set with mfcc for improved closed
+  set text-independent speaker identification.
+\newblock {\em 2006 IEEE International Conference on Industrial Technology},
+  pages 387--390, 2006.
+
+\bibitem{1163420}
+S.~Davis and P.~Mermelstein.
+\newblock Comparison of parametric representations for monosyllabic word
+  recognition in continuously spoken sentences.
+\newblock {\em IEEE Transactions on Acoustics, Speech, and Signal Processing},
+  28(4):357--366, 1980.
+
+\bibitem{article}
+Jeremiah Deng, Christian Simmermacher, and Stephen Cranefield.
+\newblock A study on feature analysis for musical instrument classification.
+\newblock {\em IEEE transactions on systems, man, and cybernetics. Part B,
+  Cybernetics : a publication of the IEEE Systems, Man, and Cybernetics
+  Society}, 38:429--38, 05 2008.
+
+\bibitem{Dupont_2013}
+Stephane Dupont, Thierry Ravet, Cecile Picard-Limpens, and Christian Frisson.
+\newblock Nonlinear dimensionality reduction approaches applied to music and
+  textural sounds.
+\newblock {\em 2013 IEEE International Conference on Multimedia and Expo
+  (ICME)}, Jul 2013.
+
+\bibitem{medium}
+Leon Fedden.
+\newblock Comparative audio analysis with wavenet, mfccs, umap, t-sne and pca,
+  2017.
+
+\bibitem{sne}
+Geoffrey Hinton and Sam Roweis.
+\newblock Stochastic neighbor embedding.
+\newblock 15, 06 2003.
+
+\bibitem{inf_drum_machine}
+Yotam~Mann Kyle~McDonald, Manny~Tan.
+\newblock The infinite drum machine.
+\newblock 2016.
+
+\bibitem{doi:10.1142/S0219720017500172}
+Wentian Li, Jane~E. Cerise, Yaning Yang, and Henry Han.
+\newblock Application of t-sne to human genetic data.
+\newblock {\em Journal of Bioinformatics and Computational Biology},
+  15(04):1750017, 2017.
+\newblock PMID: 28718343.
+
+\bibitem{medley}
+Vincent Lostanlen, Carmine-Emanuele Cella, Rachel Bittner, and Slim Essid.
+\newblock {Medley-solos-DB: a cross-collection dataset for musical instrument
+  recognition}.
+\newblock September 2019.
+
+\bibitem{librosa}
+Brian McFee, Vincent Lostanlen, Alexandros Metsai, Matt McVicar, Stefan Balke,
+  Carl Thomé, Colin Raffel, Frank Zalkow, Ayoub Malek, Dana, Kyungyun Lee,
+  Oriol Nieto, Jack Mason, Dan Ellis, Eric Battenberg, Scott Seyfarth, Ryuichi
+  Yamamoto, Keunwoo Choi, viktorandreevichmorozov, Josh Moore, Rachel Bittner,
+  Shunsuke Hidaka, Ziyao Wei, nullmightybofo, Darío Hereñú, Fabian-Robert
+  Stöter, Pius Friesch, Adam Weiss, Matt Vollrath, and Taewoon Kim.
+\newblock librosa/librosa: 0.8.0.
+\newblock July 2020.
+
+\bibitem{Pols1977SpectralAA}
+L.~Pols.
+\newblock Spectral analysis and identification of dutch vowels in monosyllabic
+  words.
+\newblock 1977.
+
+\bibitem{popper}
+Popper Polsby, Daniel.
+\newblock The third criterion: Compactness as a procedural safeguard against
+  partisan gerrymandering.
+\newblock {\em Yale Law \& policy Review 9.2 (1991): 301-353.}, 9:2579--2605,
+  2008.
+
+\bibitem{Racharla_2020}
+Karthikeya Racharla, Vineet Kumar, Chaudhari~Bhushan Jayant, Ankit Khairkar,
+  and Paturu Harish.
+\newblock Predominant musical instrument classification based on spectral
+  features.
+\newblock {\em 2020 7th International Conference on Signal Processing and
+  Integrated Networks (SPIN)}, Feb 2020.
+
+\bibitem{klustr}
+Lamtharn (Hanoi) Hantrakul \&~Avneesh Sarwate.
+\newblock Klustr: A tool for dimensionality reduction and visualization of
+  large audio datasets.
+\newblock \url{https://github.com/lamtharnhantrakul/klustr}, 2017.
+
+\bibitem{book}
+Julius Smith.
+\newblock {\em Spectral Audio Signal Processing}.
+\newblock 01 2008.
+
+\bibitem{tsne}
+L.J.P. {van der Maaten} and G.E. Hinton.
+\newblock Visualizing high-dimensional data using t-sne.
+\newblock {\em Journal of Machine Learning Research}, 9:2579--2605, 2008.
+
+\end{thebibliography}

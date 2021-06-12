@@ -20,6 +20,7 @@
 \usepackage{etoolbox}
 \usepackage{amssymb}
 \usepackage{titlesec}
+\usepackage{lmodern}
 
 \usepackage[nottoc]{tocbibind}
 \author{Łukasz Piotrak}
@@ -161,24 +162,6 @@ MIR may be subdivided into two distinct subdomains. The first focused mainly on 
 
 There are a wide range of features which describe different statistical, physical and perceptual aspects of sound. Some of the most commonly used in the field of MIR are described bellow.
 
-% \subsection{Signal processing}
-% \label{sec:org19fe369}
-% \begin{enumerate}
-% \item The fourier transform
-% \label{sec:org8e1fd90}
-% \item The fast fourier transform
-% \label{sec:org49e433d}
-% \item Signal processing and limitations
-% \label{sec:orgcde52dd}
-% \end{enumerate}
-% \subsection{Pre processing steps}
-% \label{sec:orgdd5f8ff}
-% \begin{enumerate}
-% \item Down mixing
-% \label{sec:org38fd0e8}
-% \item Normalization
-% \label{sec:orgda013eb}
-% \end{enumerate}
 \subsection{Short-time Fourier Transform (STFT)}
 \label{sec:org5ad94c1}
 The Short-time Fourier Transform is a representation of a signal obtained by taking the Fourier transform of short segments of time. The method used to obtain the STFT is relatively straightforward. First, the signal is divided into shorter, equal-length segments using a window function. These segments usually have some overlap in order to prevent artifacts of the original signal (so-called spectral leakage) Multiple window functions could be used for this step, however a Hann window is usually used. Usually a window length of 10 to 300ms is chosen. Smith \cite{book} points out three reasons for doing so:
@@ -189,9 +172,15 @@ The Short-time Fourier Transform is a representation of a signal obtained by tak
 \item Computation of the fourier transform is costly and computing a whole signal at once may inefficient and undesirable.
 \end{itemize}
 
-Next, the Discrete Fourier Transform (DFT) is computed for each segment. We can thus observe how the frequency content of the signal changes as we progress through time.
+Next, the Discrete Fourier Transform (DFT) is computed for each segment:
+\begin{equation}
+\label{eq:2}
+S_{i}(k) = \Sigma^{N}_{n=1}s_{i}(n)h(n)e^{-j2\pi kn/N} 1\leq k \leq K
+\end{equation}
+Where $s_{i}(n)$ is the i-th window of the original signal, $h(n)$ is an analysis window of $N$ samples and $K$ is the length of the DFT.
+We can thus observe how the frequency content of the signal changes as we progress through time.
 
-\begin{figure}[h!]
+\begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{./Figures/orig_stft.png}
 \caption{An STFT spectrogram}
@@ -200,17 +189,41 @@ Next, the Discrete Fourier Transform (DFT) is computed for each segment. We can 
 \subsection{Mel Frequency Cepstral Coefficients (MFCC)}
 \label{sec:org657745a}
 
-The motivating idea of mel frequency cepstral coefficients is to compress information about the vocal tract (smoothed spectrum) into a small number of coefficients based on an understanding of the cochlea and how humans interpret sound. The driving force behind this technique is the observation that humans percieve sound in a logarithmic, not linear scale. An example MFCC spectrogram can be seen in \ref{fig:mfcc}. There is no one standard way of calculating the coefficients, however the main steps may be summarized as follows:
+Davis and Mermelstein~\cite{1163420} first introduced the concept of MFCC in 1980.
+Several parametric representations of acoustic signals were compared with an emphasis placed on providing a way of distinguishing between phonetically similar monosyllabic words. This resulted in the development of a compact representation, which could provide an efficient way of reflecting phonetic differences between phonemes.
+Inspired by the observation that humans percieve sound in a logarithmic, not linear scale. A key component to the success of the MFCC representation is the initial transformation of the signal using the Mel-filterbank seen in \ref{fig:mel_filterbank}.
+Earlier work by Pols~\cite{Pols1977SpectralAA}, suggested that a cosine series expansion on these  Mel-filtered frequency energies which might yield an efficient representation of audio signals for speech recognition systems.
+An example MFCC spectrogram can be seen in \ref{fig:mfcc}. The main steps for calculating MFCC may be summarized as follows:
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\textwidth]{./Figures/mel_flow.png}
+\caption{\label{fig:mel_flow}A high-level diagram of the MFCC calculation algorithm.}
+\end{figure}
+
 
 \begin{enumerate}
-    \item Take a Fourier tranform of a short, windowed fragment of the signal (as in the STFT)
-    \item Apply the mel filterbank (shown in \ref{fig:mel_filterbank}) to convert the frequencies to the mel scale.
-    \item At each of the mel frequencies, take the logarithm of the power. $log(sum(x^{2}))$
-    \item Take the discrete cosine transform of the resulting values (express the value of x as a sum of cosine functions of different frequencies).
-    \item The amplitudes of the resulting spectrum are the Coefficients.
+    \item Split the signal into windowed fragments using a window function, typically a Hamming window is used \cite{Chakroborty2006FusionOA} with a period of 20-40ms. This period allows us to obtain a reliable estimate of the spectral features at the particular window while also roughly corresponding to the temporal resolution of human hearing. A longer period would mean losing information about the spectral variation.
+  \item Similarly to the calculation of STFT, the Discrete Fourier Transform \ref{eq:2} is applied to each window:
+\[ |Y(k)^{2}| = | \Sigma^{M}_{n=1}y(n)\cdot e^{(\frac{-j2\pi nk}{M})}|^{2} \]
+        where $1 \leq k \leq M$.
+        Usually, a 512 frequency bin DFT is calculated but only the first 257 are used in later steps.
+  % \item The periodogram-based power spectral estimate is calculated from the DFT of each frame:
+  %       \[ P_{i}(k) = \frac{1}{N}|S_{i}(k)|^{2} \]
+    \item Next, the Mel filterbank is applied to each window (shown in \ref{fig:mel_filterbank}) to convert the frequencies to the Mel scale. The Mel scale is used because the human perception of sound is more sensitive to differences in pitch at low rather than high frequencies. The formula for converting from the frequency scale to the Mel scale is:
+        \[ M(f) = 2595 \log_{10} (1+f/700)\]
+    Commonly, 26 filters are used and applied to the result of the previous step. To calculate the filterbank energies, each filterbank (the length of which corresponds to the length of the periodogram) is multiplied with the power spectrum. The result is summed, the result of which indicates the amount of energy in the periodogram power spectrum for that particular filterbank. The result of this step is 26 coefficients corresponding to the 26 filterbank energies.
+        The output filterbank energies may be calculated as:
+        \[ e(i) = \Sigma^{M}_{k=1}|Y(k)|^{2}\cdot \psi_{i}(k) \]
+
+  \item The $\log$ for each filterbank energy is taken.
+    \item The Discrete Cosine Transform (DCT) is taken for each filterbank energy log, giving 26 cepstral coefficients.
+    In effect this gives the formula:
+        \[ MFCC_{m} = \sqrt{\frac{2}{Q}} \Sigma^{Q-1}_{l=0}\log [e(l + 1)]\cdot \cos \left[m \cdot (\frac{2l-1}{2})\cdot \frac{\pi }{Q} \right] \]
+        Where $0 \leq m \leq R - 1, R$ is the number of cepstrum coefficients.
 \end{enumerate}
 
-\begin{figure}[h!b]
+\begin{figure}[H]
 \centering
 \includegraphics[width=0.7\textwidth]{./Figures/mel_filterbank.png}
 \caption{\label{fig:mel_filterbank}The mel filterbank}
@@ -399,9 +412,10 @@ t-Distributed Stochastic Neighbour Embedding is a nonlinear dimensionality reduc
 
 \end{enumerate}
 
-\subsection{UMAP}
+\subsection{Uniform Manifold Approximation and Projection (UMAP)}
 \label{sec:org6a758a8}
-TODO
+Similar to t-SNE, UMAP is a nonlinear technique for dimension reduction. UMAP seems to preserve more of the global structure and has a superior run time. Unlike t-SNE it has no restrictions on embedding dimensions, which means it can be used as a general-purpose dimensionality reduction technique for machine learning, not just for visualizations. It is based on manifold learning techniques and uses ideas from topological data analysis.
+
 
 \section{Evaluation metrics}
 \label{sec:org078e27c}
@@ -652,7 +666,7 @@ is the value used by the algorithm to determine what the minimum distance points
 
 \begin{figure*}[h!tbp]
 \centering
-\makebox[\textwidth]{\includegraphics[height=.65\paperheight, trim=0 0 0 15cm]{./Figures/umap_stft_gridsearch.png}}
+\makebox[\textwidth]{\includegraphics[width=.9\paperwidth]{./Figures/umap_stft_gridsearch_reduced.png}}
 \caption{A UMAP parameter sweep with STFT as the feature.\\ It is clear to see that lower values of hyperparameters (top left) give more densely clustered plots with a focus on the local structure, while higher values (bottom right) are more distributed and focus more on global relationships.}
 \end{figure*}
 
@@ -691,11 +705,23 @@ With \(H_{p}(r)\) being Ripley's H-function for plot \(p\) taken for radius \(r\
 
 \begin{figure*}[h!tbp]
 \centering
-\makebox[\textwidth]{\includegraphics[width=.9\paperwidth, trim=0 0 0 10cm]{./Figures/best_overall_per_feature.png}}
-\caption{\label{fig:best_overall}The best scoring plots for each feature set.}
+\makebox[\textwidth]{\includegraphics[width=.8\paperheight, angle=90]{./Figures/Best_Overall_STFT.png}}
+\caption{\label{fig:best_overall_stft}The best scoring plots for STFT features.}
 \end{figure*}
 
-The final, best scoring plots for different feature sets are shown in \ref{fig:best_overall}. Most of the plots seperate the instrument classes relatively well They also seem to exhibit a round and fairly uniform structure. The exceptions are plots which have gone through a preliminary PCA reduction step, leaving 3 prinicipal components. These are labeled \textit{PCA 3 STFT} and \textit{PCA 3 MFCC}. The interesting, string-shaped plots only appear with the combination of \textit{ PCA 3 STFT } and \textit{ PCA 3 MFCC } with \textit{ UMAP }. This is most probably a side-effect of the way in which UMAP builds it's high dimensional representation of the data by using a fuzzy simplical complex. UMAP always connects points to their nearest neighbour in the high-dimensional representation. I hypothesize that the string-like shapes are the joined nearest neighbours. UMAP then decides that the global structure contained in the 3d PCA plot shown in \ref{fig:3d_pca} is best represented by spacing the strings as visible in the plots. A closer look at the UMAP grid search (\ref{fig:umap_3d_pca_grid_search}) reveals that this is most probably  the case. The more nearest neighbours the UMAP algorithm uses to determine connectedness in the high-dimensional representation, the more pronounced becomes the pattern.
+\begin{figure*}[h!tbp]
+\centering
+\makebox[\textwidth]{\includegraphics[width=.8\paperheight, angle=90]{./Figures/Best_Overall_MFCC.png}}
+\caption{\label{fig:best_overall_mfcc}The best scoring plots for MFCC features.}
+\end{figure*}
+
+\begin{figure*}[h!tbp]
+\centering
+\makebox[\textwidth]{\includegraphics[width=.9\paperwidth, trim=0 0 0 10cm]{./Figures/Best_Overall_Combined.png}}
+\caption{\label{fig:best_overall_combined}The best scoring plots for MIR features and combined feature sets.}
+\end{figure*}
+
+The final, best scoring plots for different feature sets are shown in \ref{fig:best_overall_stft}, \ref{fig:best_overall_mfcc}, \ref{fig:best_overall_combined}. Most of the plots seperate the instrument classes relatively well They also seem to exhibit a round and fairly uniform structure. The exceptions are plots which have gone through a preliminary PCA reduction step, leaving 3 prinicipal components. These are labeled \textit{PCA 3 STFT} and \textit{PCA 3 MFCC}. The interesting, string-shaped plots only appear with the combination of \textit{ PCA 3 STFT } and \textit{ PCA 3 MFCC } with \textit{ UMAP }. This is most probably a side-effect of the way in which UMAP builds it's high dimensional representation of the data by using a fuzzy simplical complex. UMAP always connects points to their nearest neighbour in the high-dimensional representation. I hypothesize that the string-like shapes are the joined nearest neighbours. UMAP then decides that the global structure contained in the 3d PCA plot shown in \ref{fig:3d_pca} is best represented by spacing the strings as visible in the plots. A closer look at the UMAP grid search (\ref{fig:umap_3d_pca_grid_search}) reveals that this is most probably  the case. The more nearest neighbours the UMAP algorithm uses to determine connectedness in the high-dimensional representation, the more pronounced becomes the pattern.
 
 \begin{figure}[h!b]
 \centering
@@ -705,8 +731,8 @@ The final, best scoring plots for different feature sets are shown in \ref{fig:b
 
 \begin{figure*}[h!tbp]
 \centering
-\makebox[\textwidth]{\includegraphics[height=.65\paperheight, trim=0 0 0 15cm]{./Figures/umap_grid_search_pca_3.png}}
-\caption{A UMAP grid search on the PCA 3 MFCC feature. As the value of $n$ neighbours increases, the string-like pattern gets more pronounced.}
+\makebox[\textwidth]{\includegraphics[height=\textheight]{./Figures/umap_grid_search_pca_3_reduced.png}}
+\caption{A grid search on the UMAP algorithm with the PCA 3 MFCC feature. As the value of $n$ neighbours increases, the string-like pattern gets more pronounced.}
 \label{fig:umap_3d_pca_grid_search}
 \end{figure*}
 

@@ -1,0 +1,30 @@
+(TeX-add-style-hook
+ "Bibliography"
+ (lambda ()
+   (LaTeX-add-bibitems
+    "1163420"
+    "Chakroborty2006FusionOA"
+    "Dupont_2013"
+    "Fried:2014:A2A"
+    "Pols1977SpectralAA"
+    "irmas"
+    "Racharla_2020"
+    "article"
+    ""
+    "book"
+    "doi:10.1142/S0219720017500172"
+    "klustr"
+    "librosa"
+    "lostanlen2019ismir"
+    "medium"
+    "medley"
+    "popper"
+    "quick-tsne"
+    "recent_philosophy"
+    "silhouette"
+    "sne"
+    "tsne"
+    "umap"
+    "wattenberg2016how"))
+ :bibtex)
+

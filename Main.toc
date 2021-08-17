@@ -18,29 +18,29 @@
 \contentsline {section}{\numberline {2.2}Dimensionality reduction}{13}{section.2.2}%
 \contentsline {subsection}{\numberline {2.2.1}Principal Component Analysis (PCA)}{13}{subsection.2.2.1}%
 \contentsline {subsection}{\numberline {2.2.2}t-Distributed Stochastic Neighbour Embedding (t-SNE)}{14}{subsection.2.2.2}%
-\contentsline {subsection}{\numberline {2.2.3}Uniform Manifold Approximation and Projection (UMAP)}{16}{subsection.2.2.3}%
-\contentsline {section}{\numberline {2.3}Evaluation metrics}{17}{section.2.3}%
-\contentsline {subsection}{\numberline {2.3.1}Silhouette Score}{17}{subsection.2.3.1}%
-\contentsline {subsection}{\numberline {2.3.2}Roundness}{18}{subsection.2.3.2}%
-\contentsline {subsection}{\numberline {2.3.3}Overlap of cluster convex hulls}{18}{subsection.2.3.3}%
-\contentsline {subsection}{\numberline {2.3.4}Ripley's K function}{18}{subsection.2.3.4}%
-\contentsline {chapter}{\numberline {3}Experiment design and overview}{20}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Dataset}{20}{section.3.1}%
-\contentsline {section}{\numberline {3.2}The processing pipeline}{20}{section.3.2}%
-\contentsline {section}{\numberline {3.3}Preprocessing}{22}{section.3.3}%
-\contentsline {section}{\numberline {3.4}Feature Extraction}{22}{section.3.4}%
-\contentsline {subsection}{\numberline {3.4.1}Short-time Fourier Transform (STFT)}{23}{subsection.3.4.1}%
-\contentsline {subsection}{\numberline {3.4.2}MFCC}{23}{subsection.3.4.2}%
-\contentsline {subsection}{\numberline {3.4.3}Music Information Retrieval Metrics}{23}{subsection.3.4.3}%
-\contentsline {section}{\numberline {3.5}Feature Manipulation}{24}{section.3.5}%
-\contentsline {section}{\numberline {3.6}Dimensionality Reduction}{26}{section.3.6}%
-\contentsline {section}{\numberline {3.7}Scoring the plots}{28}{section.3.7}%
-\contentsline {chapter}{\numberline {4}Experiment Evaluation}{31}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Overall Results}{31}{section.4.1}%
-\contentsline {section}{\numberline {4.2}The Ripley metric}{34}{section.4.2}%
-\contentsline {section}{\numberline {4.3}The Silhouette Measure}{34}{section.4.3}%
-\contentsline {section}{\numberline {4.4}Future work}{35}{section.4.4}%
-\contentsline {section}{\numberline {4.5}Conclusion}{41}{section.4.5}%
-\contentsline {chapter}{Bibliography}{42}{chapter*.2}%
-\contentsline {chapter}{Appendices}{45}{section*.3}%
-\contentsline {chapter}{\numberline {A}Source Code}{45}{appendix.A}%
+\contentsline {subsection}{\numberline {2.2.3}Uniform Manifold Approximation and Projection (UMAP)}{17}{subsection.2.2.3}%
+\contentsline {section}{\numberline {2.3}Evaluation metrics}{19}{section.2.3}%
+\contentsline {subsection}{\numberline {2.3.1}Silhouette Score}{20}{subsection.2.3.1}%
+\contentsline {subsection}{\numberline {2.3.2}Roundness}{20}{subsection.2.3.2}%
+\contentsline {subsection}{\numberline {2.3.3}Overlap of cluster convex hulls}{21}{subsection.2.3.3}%
+\contentsline {subsection}{\numberline {2.3.4}Ripley's K function}{21}{subsection.2.3.4}%
+\contentsline {chapter}{\numberline {3}Experiment design and overview}{22}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Dataset}{22}{section.3.1}%
+\contentsline {section}{\numberline {3.2}The processing pipeline}{22}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Preprocessing}{24}{section.3.3}%
+\contentsline {section}{\numberline {3.4}Feature Extraction}{24}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Short-time Fourier Transform (STFT)}{25}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}MFCC}{25}{subsection.3.4.2}%
+\contentsline {subsection}{\numberline {3.4.3}Music Information Retrieval Metrics}{25}{subsection.3.4.3}%
+\contentsline {section}{\numberline {3.5}Feature Manipulation}{26}{section.3.5}%
+\contentsline {section}{\numberline {3.6}Dimensionality Reduction}{28}{section.3.6}%
+\contentsline {section}{\numberline {3.7}Scoring the plots}{30}{section.3.7}%
+\contentsline {chapter}{\numberline {4}Experiment Evaluation}{33}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Overall Results}{33}{section.4.1}%
+\contentsline {section}{\numberline {4.2}The Ripley metric}{36}{section.4.2}%
+\contentsline {section}{\numberline {4.3}The Silhouette Measure}{36}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Future work}{37}{section.4.4}%
+\contentsline {section}{\numberline {4.5}Conclusion}{43}{section.4.5}%
+\contentsline {chapter}{Bibliography}{44}{chapter*.2}%
+\contentsline {chapter}{Appendices}{47}{section*.3}%
+\contentsline {chapter}{\numberline {A}Source Code}{47}{appendix.A}%

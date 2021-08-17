@@ -4,14 +4,14 @@
    (TeX-add-to-alist 'LaTeX-provided-class-options
                      '(("report" "a4paper" "12pt" "twoside")))
    (TeX-add-to-alist 'LaTeX-provided-package-options
-                     '(("inputenc" "utf8") ("fontenc" "T1") ("ulem" "normalem") ("tocbibind" "nottoc")))
-   (add-to-list 'LaTeX-verbatim-macros-with-braces-local "href")
-   (add-to-list 'LaTeX-verbatim-macros-with-braces-local "hyperref")
-   (add-to-list 'LaTeX-verbatim-macros-with-braces-local "hyperimage")
-   (add-to-list 'LaTeX-verbatim-macros-with-braces-local "hyperbaseurl")
-   (add-to-list 'LaTeX-verbatim-macros-with-braces-local "nolinkurl")
-   (add-to-list 'LaTeX-verbatim-macros-with-braces-local "url")
+                     '(("inputenc" "utf8") ("fontenc" "T1") ("ulem" "normalem") ("algorithm2e" "ruled" "vlined") ("tocbibind" "nottoc")))
    (add-to-list 'LaTeX-verbatim-macros-with-braces-local "path")
+   (add-to-list 'LaTeX-verbatim-macros-with-braces-local "url")
+   (add-to-list 'LaTeX-verbatim-macros-with-braces-local "nolinkurl")
+   (add-to-list 'LaTeX-verbatim-macros-with-braces-local "hyperbaseurl")
+   (add-to-list 'LaTeX-verbatim-macros-with-braces-local "hyperimage")
+   (add-to-list 'LaTeX-verbatim-macros-with-braces-local "hyperref")
+   (add-to-list 'LaTeX-verbatim-macros-with-braces-local "href")
    (add-to-list 'LaTeX-verbatim-macros-with-delims-local "path")
    (TeX-run-style-hooks
     "latex2e"
@@ -36,6 +36,7 @@
     "etoolbox"
     "titlesec"
     "lmodern"
+    "algorithm2e"
     "tocbibind")
    (TeX-add-symbols
     "Cov"
@@ -68,6 +69,10 @@
     "eq:1"
     "sec:orgadaa38f"
     "sec:org6a758a8"
+    "alg:localFuzzySimplicialSet"
+    "alg:smoothKNNDist"
+    "alg:spectralEmbedding"
+    "alg:optimizeEmbedding"
     "sec:org078e27c"
     "sec:org8d91088"
     "sec:org7b61201"

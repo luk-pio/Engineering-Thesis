@@ -16,10 +16,12 @@
 \gdef\HyperFirstAtBeginDocument#1{#1}
 \providecommand\HyField@AuxAddToFields[1]{}
 \providecommand\HyField@AuxAddToCoFields[2]{}
+\providecommand \oddpage@label [2]{}
 \citation{inf_drum_machine}
 \@writefile{toc}{\contentsline {chapter}{\numberline {1}Introduction}{4}{chapter.1}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{loa}{\addvspace {10\p@ }}
 \newlabel{sec:org6dce8a9}{{1}{4}{Introduction}{chapter.1}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {1.1}{\ignorespaces Browsing sound samples using a directory structure.}}{4}{figure.1.1}\protected@file@percent }
 \citation{klustr}
@@ -39,6 +41,7 @@
 \@writefile{toc}{\contentsline {chapter}{\numberline {2}Background}{7}{chapter.2}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{loa}{\addvspace {10\p@ }}
 \newlabel{sec:org4d1b31d}{{2}{7}{Background}{chapter.2}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {2.1}Music Information Retrieval}{7}{section.2.1}\protected@file@percent }
 \newlabel{sec:orge32af72}{{2.1}{7}{Music Information Retrieval}{section.2.1}{}}
@@ -83,101 +86,112 @@
 \newlabel{eq:1}{{2.2}{14}{Principal Component Analysis (PCA)}{equation.2.2.2}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2.2}t-Distributed Stochastic Neighbour Embedding (t-SNE)}{14}{subsection.2.2.2}\protected@file@percent }
 \newlabel{sec:orgadaa38f}{{2.2.2}{14}{t-Distributed Stochastic Neighbour Embedding (t-SNE)}{subsection.2.2.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.3}Uniform Manifold Approximation and Projection (UMAP)}{16}{subsection.2.2.3}\protected@file@percent }
-\newlabel{sec:org6a758a8}{{2.2.3}{16}{Uniform Manifold Approximation and Projection (UMAP)}{subsection.2.2.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.3}Uniform Manifold Approximation and Projection (UMAP)}{17}{subsection.2.2.3}\protected@file@percent }
+\newlabel{sec:org6a758a8}{{2.2.3}{17}{Uniform Manifold Approximation and Projection (UMAP)}{subsection.2.2.3}{}}
+\@writefile{loa}{\contentsline {algocf}{\numberline {1}{\ignorespaces High-level UMAP algorithm}}{17}{algocf.1}\protected@file@percent }
+\@writefile{loa}{\contentsline {algocf}{\numberline {2}{\ignorespaces localFuzzySimplicialSet}}{18}{algocf.2}\protected@file@percent }
+\newlabel{alg:localFuzzySimplicialSet}{{2}{18}{Uniform Manifold Approximation and Projection (UMAP)}{algocf.2}{}}
+\@writefile{loa}{\contentsline {algocf}{\numberline {3}{\ignorespaces smoothKNNDist}}{18}{algocf.3}\protected@file@percent }
+\newlabel{alg:smoothKNNDist}{{3}{18}{Uniform Manifold Approximation and Projection (UMAP)}{algocf.3}{}}
+\@writefile{loa}{\contentsline {algocf}{\numberline {4}{\ignorespaces spectralEmbedding}}{19}{algocf.4}\protected@file@percent }
+\newlabel{alg:spectralEmbedding}{{4}{19}{Uniform Manifold Approximation and Projection (UMAP)}{algocf.4}{}}
+\@writefile{loa}{\contentsline {algocf}{\numberline {5}{\ignorespaces Optimizing the embedding}}{19}{algocf.5}\protected@file@percent }
+\newlabel{alg:optimizeEmbedding}{{5}{19}{Uniform Manifold Approximation and Projection (UMAP)}{algocf.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.3}Evaluation metrics}{19}{section.2.3}\protected@file@percent }
+\newlabel{sec:org078e27c}{{2.3}{19}{Evaluation metrics}{section.2.3}{}}
 \citation{popper}
-\@writefile{toc}{\contentsline {section}{\numberline {2.3}Evaluation metrics}{17}{section.2.3}\protected@file@percent }
-\newlabel{sec:org078e27c}{{2.3}{17}{Evaluation metrics}{section.2.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.1}Silhouette Score}{17}{subsection.2.3.1}\protected@file@percent }
-\newlabel{sec:org8d91088}{{2.3.1}{17}{Silhouette Score}{subsection.2.3.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.2}Roundness}{18}{subsection.2.3.2}\protected@file@percent }
-\newlabel{sec:org7b61201}{{2.3.2}{18}{Roundness}{subsection.2.3.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.3}Overlap of cluster convex hulls}{18}{subsection.2.3.3}\protected@file@percent }
-\newlabel{sec:org274a5d2}{{2.3.3}{18}{Overlap of cluster convex hulls}{subsection.2.3.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.4}Ripley's K function}{18}{subsection.2.3.4}\protected@file@percent }
-\newlabel{sec:org533d625}{{2.3.4}{18}{Ripley's K function}{subsection.2.3.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.1}Silhouette Score}{20}{subsection.2.3.1}\protected@file@percent }
+\newlabel{sec:org8d91088}{{2.3.1}{20}{Silhouette Score}{subsection.2.3.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.2}Roundness}{20}{subsection.2.3.2}\protected@file@percent }
+\newlabel{sec:org7b61201}{{2.3.2}{20}{Roundness}{subsection.2.3.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.3}Overlap of cluster convex hulls}{21}{subsection.2.3.3}\protected@file@percent }
+\newlabel{sec:org274a5d2}{{2.3.3}{21}{Overlap of cluster convex hulls}{subsection.2.3.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.4}Ripley's K function}{21}{subsection.2.3.4}\protected@file@percent }
+\newlabel{sec:org533d625}{{2.3.4}{21}{Ripley's K function}{subsection.2.3.4}{}}
 \citation{medley}
 \citation{bittner_fuentes_2019}
-\@writefile{toc}{\contentsline {chapter}{\numberline {3}Experiment design and overview}{20}{chapter.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {3}Experiment design and overview}{22}{chapter.3}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{sec:orga220b5b}{{3}{20}{Experiment design and overview}{chapter.3}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.1}Dataset}{20}{section.3.1}\protected@file@percent }
-\newlabel{sec:orgac308b8}{{3.1}{20}{Dataset}{section.3.1}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {3.1}{\ignorespaces The distribution of instrument classes}}{20}{table.3.1}\protected@file@percent }
-\newlabel{table:distr_of_sounds}{{3.1}{20}{The distribution of instrument classes}{table.3.1}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.2}The processing pipeline}{20}{section.3.2}\protected@file@percent }
-\newlabel{sec:org82c3cb3}{{3.2}{20}{The processing pipeline}{section.3.2}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces Selected sample belonging to each of the instrument classes. Each consists of 65,536 32-bit floating point numbers.}}{21}{figure.3.1}\protected@file@percent }
-\newlabel{fig:8-plots}{{3.1}{21}{Selected sample belonging to each of the instrument classes. Each consists of 65,536 32-bit floating point numbers}{figure.3.1}{}}
+\@writefile{loa}{\addvspace {10\p@ }}
+\newlabel{sec:orga220b5b}{{3}{22}{Experiment design and overview}{chapter.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.1}Dataset}{22}{section.3.1}\protected@file@percent }
+\newlabel{sec:orgac308b8}{{3.1}{22}{Dataset}{section.3.1}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.1}{\ignorespaces The distribution of instrument classes}}{22}{table.3.1}\protected@file@percent }
+\newlabel{table:distr_of_sounds}{{3.1}{22}{The distribution of instrument classes}{table.3.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.2}The processing pipeline}{22}{section.3.2}\protected@file@percent }
+\newlabel{sec:org82c3cb3}{{3.2}{22}{The processing pipeline}{section.3.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces Selected sample belonging to each of the instrument classes. Each consists of 65,536 32-bit floating point numbers.}}{23}{figure.3.1}\protected@file@percent }
+\newlabel{fig:8-plots}{{3.1}{23}{Selected sample belonging to each of the instrument classes. Each consists of 65,536 32-bit floating point numbers}{figure.3.1}{}}
 \citation{librosa}
-\@writefile{toc}{\contentsline {section}{\numberline {3.3}Preprocessing}{22}{section.3.3}\protected@file@percent }
-\newlabel{sec:org1f10704}{{3.3}{22}{Preprocessing}{section.3.3}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces A sample from the clarinet class}}{22}{figure.3.2}\protected@file@percent }
-\newlabel{fig:example-fig}{{3.2}{22}{A sample from the clarinet class}{figure.3.2}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.4}Feature Extraction}{22}{section.3.4}\protected@file@percent }
-\newlabel{sec:org8d85bd5}{{3.4}{22}{Feature Extraction}{section.3.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.3}Preprocessing}{24}{section.3.3}\protected@file@percent }
+\newlabel{sec:org1f10704}{{3.3}{24}{Preprocessing}{section.3.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces A sample from the clarinet class}}{24}{figure.3.2}\protected@file@percent }
+\newlabel{fig:example-fig}{{3.2}{24}{A sample from the clarinet class}{figure.3.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.4}Feature Extraction}{24}{section.3.4}\protected@file@percent }
+\newlabel{sec:org8d85bd5}{{3.4}{24}{Feature Extraction}{section.3.4}{}}
 \citation{medium}
 \citation{klustr}
 \citation{Racharla_2020}
 \citation{article}
 \citation{article}
 \citation{klustr}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.1}Short-time Fourier Transform (STFT)}{23}{subsection.3.4.1}\protected@file@percent }
-\newlabel{sec:org0c9e9c5}{{3.4.1}{23}{Short-time Fourier Transform (STFT)}{subsection.3.4.1}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces STFT of the sample in figure \ref  {fig:example-fig}}}{23}{figure.3.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.2}MFCC}{23}{subsection.3.4.2}\protected@file@percent }
-\newlabel{sec:org70aa9fd}{{3.4.2}{23}{MFCC}{subsection.3.4.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.3}Music Information Retrieval Metrics}{23}{subsection.3.4.3}\protected@file@percent }
-\newlabel{sec:orgb3249b0}{{3.4.3}{23}{Music Information Retrieval Metrics}{subsection.3.4.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.1}Short-time Fourier Transform (STFT)}{25}{subsection.3.4.1}\protected@file@percent }
+\newlabel{sec:org0c9e9c5}{{3.4.1}{25}{Short-time Fourier Transform (STFT)}{subsection.3.4.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces STFT of the sample in figure \ref  {fig:example-fig}}}{25}{figure.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.2}MFCC}{25}{subsection.3.4.2}\protected@file@percent }
+\newlabel{sec:org70aa9fd}{{3.4.2}{25}{MFCC}{subsection.3.4.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.3}Music Information Retrieval Metrics}{25}{subsection.3.4.3}\protected@file@percent }
+\newlabel{sec:orgb3249b0}{{3.4.3}{25}{Music Information Retrieval Metrics}{subsection.3.4.3}{}}
 \citation{Dupont_2013}
 \citation{medium}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces MFCC of the sample in figure \ref  {fig:example-fig}}}{24}{figure.3.4}\protected@file@percent }
-\newlabel{fig:mfcc}{{3.4}{24}{MFCC of the sample in figure \ref {fig:example-fig}}{figure.3.4}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.5}Feature Manipulation}{24}{section.3.5}\protected@file@percent }
-\newlabel{sec:org694b75f}{{3.5}{24}{Feature Manipulation}{section.3.5}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.5}{\ignorespaces Graphs of MIR features for the sample in figure \ref  {fig:example-fig}}}{25}{figure.3.5}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces MFCC of the sample in figure \ref  {fig:example-fig}}}{26}{figure.3.4}\protected@file@percent }
+\newlabel{fig:mfcc}{{3.4}{26}{MFCC of the sample in figure \ref {fig:example-fig}}{figure.3.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.5}Feature Manipulation}{26}{section.3.5}\protected@file@percent }
+\newlabel{sec:org694b75f}{{3.5}{26}{Feature Manipulation}{section.3.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.5}{\ignorespaces Graphs of MIR features for the sample in figure \ref  {fig:example-fig}}}{27}{figure.3.5}\protected@file@percent }
 \citation{klustr}
-\@writefile{lot}{\contentsline {table}{\numberline {3.2}{\ignorespaces All feature sets used for the dimensionality reduction step}}{26}{table.3.2}\protected@file@percent }
-\newlabel{table:all_features}{{3.2}{26}{All feature sets used for the dimensionality reduction step}{table.3.2}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.6}Dimensionality Reduction}{26}{section.3.6}\protected@file@percent }
-\newlabel{sec:orgfde1e30}{{3.6}{26}{Dimensionality Reduction}{section.3.6}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.2}{\ignorespaces All feature sets used for the dimensionality reduction step}}{28}{table.3.2}\protected@file@percent }
+\newlabel{table:all_features}{{3.2}{28}{All feature sets used for the dimensionality reduction step}{table.3.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.6}Dimensionality Reduction}{28}{section.3.6}\protected@file@percent }
+\newlabel{sec:orgfde1e30}{{3.6}{28}{Dimensionality Reduction}{section.3.6}{}}
 \citation{doi:10.1142/S0219720017500172}
-\@writefile{toc}{\contentsline {section}{\numberline {3.7}Scoring the plots}{28}{section.3.7}\protected@file@percent }
-\newlabel{sec:org007743d}{{3.7}{28}{Scoring the plots}{section.3.7}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.6}{\ignorespaces A UMAP parameter sweep with STFT as the feature.\\ It is clear to see that lower values of hyperparameters (top left) give more densely clustered plots with a focus on the local structure, while higher values (bottom right) are more distributed and focus more on global relationships.}}{29}{figure.3.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {4}Experiment Evaluation}{31}{chapter.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.7}Scoring the plots}{30}{section.3.7}\protected@file@percent }
+\newlabel{sec:org007743d}{{3.7}{30}{Scoring the plots}{section.3.7}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.6}{\ignorespaces A UMAP parameter sweep with STFT as the feature.\\ It is clear to see that lower values of hyperparameters (top left) give more densely clustered plots with a focus on the local structure, while higher values (bottom right) are more distributed and focus more on global relationships.}}{31}{figure.3.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {4}Experiment Evaluation}{33}{chapter.4}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{sec:org8d9a4f0}{{4}{31}{Experiment Evaluation}{chapter.4}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.1}Overall Results}{31}{section.4.1}\protected@file@percent }
-\newlabel{sec:org5ce221c}{{4.1}{31}{Overall Results}{section.4.1}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces The best scoring plots for STFT features.}}{32}{figure.4.1}\protected@file@percent }
-\newlabel{fig:best_overall_stft}{{4.1}{32}{The best scoring plots for STFT features}{figure.4.1}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.2}{\ignorespaces The best scoring plots for MFCC features.}}{33}{figure.4.2}\protected@file@percent }
-\newlabel{fig:best_overall_mfcc}{{4.2}{33}{The best scoring plots for MFCC features}{figure.4.2}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.3}{\ignorespaces The best scoring plots for MIR features and combined feature sets.}}{34}{figure.4.3}\protected@file@percent }
-\newlabel{fig:best_overall_combined}{{4.3}{34}{The best scoring plots for MIR features and combined feature sets}{figure.4.3}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.2}The Ripley metric}{34}{section.4.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.3}The Silhouette Measure}{34}{section.4.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.4}Future work}{35}{section.4.4}\protected@file@percent }
-\newlabel{sec:org1054556}{{4.4}{35}{Future work}{section.4.4}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.4}{\ignorespaces A plot of the PCA 3 MFCC feature}}{35}{figure.4.4}\protected@file@percent }
-\newlabel{fig:3d_pca}{{4.4}{35}{A plot of the PCA 3 MFCC feature}{figure.4.4}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.5}{\ignorespaces A grid search on the UMAP algorithm with the PCA 3 MFCC feature. As the value of $n$ neighbours increases, the string-like pattern gets more pronounced.}}{36}{figure.4.5}\protected@file@percent }
-\newlabel{fig:umap_3d_pca_grid_search}{{4.5}{36}{A grid search on the UMAP algorithm with the PCA 3 MFCC feature. As the value of $n$ neighbours increases, the string-like pattern gets more pronounced}{figure.4.5}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.6}{\ignorespaces The top 9 scoring plots overall}}{37}{figure.4.6}\protected@file@percent }
-\newlabel{fig:top_overall}{{4.6}{37}{The top 9 scoring plots overall}{figure.4.6}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.7}{\ignorespaces Top 9 scoring plots according to the Ripley metric}}{38}{figure.4.7}\protected@file@percent }
-\newlabel{fig:top_ripley}{{4.7}{38}{Top 9 scoring plots according to the Ripley metric}{figure.4.7}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.8}{\ignorespaces Top 9 scoring plots excluding the PCA 3 features}}{39}{figure.4.8}\protected@file@percent }
-\newlabel{fig:top9_no_pca3}{{4.8}{39}{Top 9 scoring plots excluding the PCA 3 features}{figure.4.8}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.9}{\ignorespaces Top 9 scoring plots for metrics without the ripley measure}}{40}{figure.4.9}\protected@file@percent }
-\newlabel{fig:top9_no_pca3}{{4.9}{40}{Top 9 scoring plots for metrics without the ripley measure}{figure.4.9}{}}
+\@writefile{loa}{\addvspace {10\p@ }}
+\newlabel{sec:org8d9a4f0}{{4}{33}{Experiment Evaluation}{chapter.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.1}Overall Results}{33}{section.4.1}\protected@file@percent }
+\newlabel{sec:org5ce221c}{{4.1}{33}{Overall Results}{section.4.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces The best scoring plots for STFT features.}}{34}{figure.4.1}\protected@file@percent }
+\newlabel{fig:best_overall_stft}{{4.1}{34}{The best scoring plots for STFT features}{figure.4.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.2}{\ignorespaces The best scoring plots for MFCC features.}}{35}{figure.4.2}\protected@file@percent }
+\newlabel{fig:best_overall_mfcc}{{4.2}{35}{The best scoring plots for MFCC features}{figure.4.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.3}{\ignorespaces The best scoring plots for MIR features and combined feature sets.}}{36}{figure.4.3}\protected@file@percent }
+\newlabel{fig:best_overall_combined}{{4.3}{36}{The best scoring plots for MIR features and combined feature sets}{figure.4.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.2}The Ripley metric}{36}{section.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.3}The Silhouette Measure}{36}{section.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.4}Future work}{37}{section.4.4}\protected@file@percent }
+\newlabel{sec:org1054556}{{4.4}{37}{Future work}{section.4.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.4}{\ignorespaces A plot of the PCA 3 MFCC feature}}{37}{figure.4.4}\protected@file@percent }
+\newlabel{fig:3d_pca}{{4.4}{37}{A plot of the PCA 3 MFCC feature}{figure.4.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.5}{\ignorespaces A grid search on the UMAP algorithm with the PCA 3 MFCC feature. As the value of $n$ neighbours increases, the string-like pattern gets more pronounced.}}{38}{figure.4.5}\protected@file@percent }
+\newlabel{fig:umap_3d_pca_grid_search}{{4.5}{38}{A grid search on the UMAP algorithm with the PCA 3 MFCC feature. As the value of $n$ neighbours increases, the string-like pattern gets more pronounced}{figure.4.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.6}{\ignorespaces The top 9 scoring plots overall}}{39}{figure.4.6}\protected@file@percent }
+\newlabel{fig:top_overall}{{4.6}{39}{The top 9 scoring plots overall}{figure.4.6}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.7}{\ignorespaces Top 9 scoring plots according to the Ripley metric}}{40}{figure.4.7}\protected@file@percent }
+\newlabel{fig:top_ripley}{{4.7}{40}{Top 9 scoring plots according to the Ripley metric}{figure.4.7}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.8}{\ignorespaces Top 9 scoring plots excluding the PCA 3 features}}{41}{figure.4.8}\protected@file@percent }
+\newlabel{fig:top9_no_pca3}{{4.8}{41}{Top 9 scoring plots excluding the PCA 3 features}{figure.4.8}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.9}{\ignorespaces Top 9 scoring plots for metrics without the ripley measure}}{42}{figure.4.9}\protected@file@percent }
+\newlabel{fig:top9_no_pca3}{{4.9}{42}{Top 9 scoring plots for metrics without the ripley measure}{figure.4.9}{}}
 \citation{klustr}
 \bibdata{Bibliography}
-\@writefile{toc}{\contentsline {section}{\numberline {4.5}Conclusion}{41}{section.4.5}\protected@file@percent }
-\newlabel{sec:orgf2b4e9e}{{4.5}{41}{Conclusion}{section.4.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.5}Conclusion}{43}{section.4.5}\protected@file@percent }
+\newlabel{sec:orgf2b4e9e}{{4.5}{43}{Conclusion}{section.4.5}{}}
 \bibcite{silhouette}{1}
 \bibcite{bittner_fuentes_2019}{2}
 \bibcite{Chakroborty2006FusionOA}{3}
@@ -187,7 +201,7 @@
 \bibcite{medium}{7}
 \bibcite{sne}{8}
 \bibcite{inf_drum_machine}{9}
-\@writefile{toc}{\contentsline {chapter}{Bibliography}{42}{chapter*.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{Bibliography}{44}{chapter*.2}\protected@file@percent }
 \bibcite{doi:10.1142/S0219720017500172}{10}
 \bibcite{medley}{11}
 \bibcite{librosa}{12}
@@ -198,7 +212,8 @@
 \bibcite{book}{17}
 \bibcite{tsne}{18}
 \bibstyle{plain}
-\@writefile{toc}{\contentsline {chapter}{Appendices}{45}{section*.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {A}Source Code}{45}{appendix.A}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{Appendices}{47}{section*.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {A}Source Code}{47}{appendix.A}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{loa}{\addvspace {10\p@ }}

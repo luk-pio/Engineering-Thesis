@@ -21,6 +21,7 @@
 \usepackage{amssymb}
 \usepackage{titlesec}
 \usepackage{lmodern}
+\usepackage[ruled,vlined]{algorithm2e}
 
 \usepackage[nottoc]{tocbibind}
 \author{Łukasz Piotrak}
@@ -412,9 +413,129 @@ t-Distributed Stochastic Neighbour Embedding is a nonlinear dimensionality reduc
 
 \end{enumerate}
 
+\pagebreak
+
 \subsection{Uniform Manifold Approximation and Projection (UMAP)}
 \label{sec:org6a758a8}
-Similar to t-SNE, UMAP is a nonlinear technique for dimension reduction. UMAP seems to preserve more of the global structure and has a superior run time. Unlike t-SNE it has no restrictions on embedding dimensions, which means it can be used as a general-purpose dimensionality reduction technique for machine learning, not just for visualizations. It is based on manifold learning techniques and uses ideas from topological data analysis.
+Similar to t-SNE, UMAP is a nonlinear technique for dimension reduction. It was developed by McInnes et. al. in 2018. Advertised as being able to preserve more global structure and having a superior run time than t-SNE, UMAP has seen a giant growth in popularity in the last few years (4.9k Github stars vs 823 of Maatens official implementation o Barnes-Hut t-SNE). Unlike t-SNE it has no restrictions on embedding dimensions, which means it can be used as a general-purpose dimensionality reduction technique for machine learning.
+
+An overview of the UMAP algorithm is presented below:
+
+
+\begin{algorithm}[h]
+\SetAlgoLined
+\KwIn{
+$X$: Set of datapoints\\
+$n$: the neighborhood size to use for local metric approximation\\
+$d$: the dimension count of the reduction\\
+min-dist: a parameter specifying the minimum distance between points in the embedding\\
+n-epochs: a parameter controlling how much work to perform
+}
+\KwOut{$Y$: Dataset with reduced dimensions}
+\bigskip
+\For{ $x \in X$}{
+    $SS \leftarrow \bigcup_{x \in X}$localFuzzySimplicialSet($X, x, n$)
+}
+$Y \leftarrow$ spectralEmbedding(SS, $d)$\\
+$Y \leftarrow$ optimizeEmbedding(SS, $Y$, min-dist, n-epochs)\\
+\Return $Y$
+\caption{High-level UMAP algorithm}
+\end{algorithm}
+\bigskip
+This process starts by the construction of local fuzzy simplicial sets for each datapoint. These are constructed by finding the $n$ nearest neighbors according to a selected distance metric. Next a normalized, approximate distance between the neighbors on the manifold is calculated as seen in algorithm \ref{alg:smoothKNNDist}.
+
+The next step is the construction of the union of all local fuzzy simplicial sets after which Spectral embedding is performed as shown in algorithm \ref{alg:spectralEmbedding}.
+
+The last step is the optimization of the embedding by minimizing the fuzzy set cross entropy by using stochastic gradient descent as shown in algorithm \ref{alg:optimizeEmbedding}.
+
+\begin{algorithm}[h!]
+\SetAlgoLined
+\KwIn{
+$X$: Set of datapoints\\
+$x$: Datapoint to calculate the local simplicial set for\\
+$n$: the neighborhood size to used for local metric approximation\\
+}
+\KwOut{fs-set: output fuzzy simplicial set}
+\bigskip
+knn, knn-dists $\leftarrow$ approxNN($X, x, n)$\\
+$\rho \leftarrow$ knn-dists[1]\\
+$\sigma \leftarrow$ smoothKNNDist(knn-dists, $n, \rho)$\\
+fs-set$_{0} \leftarrow X$ # Fuzzy set image of 0-simplices\\
+fs-set$_{1} \leftarrow \{([x,y],0) | y \in X\}$ # Fuzzy set image of 1-simplices\\
+\For{ $y \in $knn}{
+$d_{x,y} \leftarrow $max(0, dist($x,y) - \rho$)$/ \sigma$\\
+fs-set$_{1} \leftarrow$ fs-set$_{1} \bigcup$ $([x,y], \exp (-d_{x,y}))$
+}
+\Return fs-set
+\caption{localFuzzySimplicialSet}
+\label{alg:localFuzzySimplicialSet}
+\end{algorithm}
+
+\bigskip
+
+
+\begin{algorithm}[h!]
+\SetAlgoLined
+\KwIn{
+knn-dists: distances of k-nearest neighbors\\
+$n$: the neighborhood size to used for local metric approximation\\
+$\rho$: Distance to nearest neighbor\\
+}
+\KwOut{$\sigma$: normalizing factor for distances}
+\bigskip
+binSearch(knn-dists) such that $\Sigma^{n}_{i=1} \exp (-($knn-dists$_{i} - \rho) / \sigma) = \log_{2}(n)$
+\Return $\sigma$
+\caption{smoothKNNDist}
+\label{alg:smoothKNNDist}
+\end{algorithm}
+
+\begin{algorithm}[H]
+\SetAlgoLined
+\KwIn{
+top-rep: Fuzzy simplicial set representation of the data\\
+$d$: the neighborhood size to used for local metric approximation\\
+}
+\KwOut{$Y$: Spectral embedding}
+\bigskip
+$A \leftarrow$ 1-skeleton of top-rep expressed as a weighted adjacency matrix\\
+$D \leftarrow$ degree matrix for the graph $A$\\
+$L \leftarrow D^{1/2}(D-A)D^{1/2}$\\
+evec $\leftarrow$ sorted Eigenvectors of $L$\\
+$Y \leftarrow $evec$[1\dots d + 1]$\\
+\Return $Y$
+\caption{spectralEmbedding}
+\label{alg:spectralEmbedding}
+\end{algorithm}
+
+\begin{algorithm}[H]
+\SetAlgoLined
+\KwIn{
+top-rep: Fuzzy simplicial set representation of the data\\
+$Y$: Spectral embedding\\
+$min-dist$: The minimum distance between points in the embedding\\
+$n-epochs$: number of iterations used for optimization\\
+}
+\KwOut{$Y$: optimized embedding}
+\bigskip
+$\alpha \leftarrow 1.0$\\
+Fit $\phi$ from $\psi$ defined by min-dist\\
+\For{ $e \leftarrow 1, \dots ,$n-epochs }{
+    \For{$([a,b],p) \in$ top-rep_{1} }{
+        \If{Random() \leq $p$}{
+            $y_a \leftarrow y_a + \alpha * \delta (\log (\phi))(y_a, y_b)$\\
+            \For{$i \leftarrow 1, \dots,$n-neg-samples}{
+                $c \leftarrow$ random sample from Y\\
+                $y_a \leftarrow y_a + \alpha * \delta (\log (\phi))(y_a, y_c)$
+            }
+        }{}
+    }
+    $\alpha \leftarrow 1.0 - e$/n-epochs
+}
+
+\Return $Y$
+\caption{Optimizing the embedding}
+\label{alg:optimizeEmbedding}
+\end{algorithm}
 
 
 \section{Evaluation metrics}
